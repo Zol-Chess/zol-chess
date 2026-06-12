@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
-import { getPuzzle, getOrCreateSession, saveSession } from "@/app/lib/chess/puzzle-store";
-import { validateMove } from "@/app/lib/chess/puzzle";
+
+import {
+  getPuzzle,
+  getOrCreateSession,
+  saveSession,
+} from "@/lib/chess/puzzle-store";
+import { validateMove } from "@/lib/chess/puzzle";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -11,7 +16,8 @@ export async function POST(req: Request, { params }: Params) {
   const { walletAddress, move } = await req.json();
 
   const puzzle = getPuzzle(id);
-  if (!puzzle) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!puzzle)
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const session = getOrCreateSession(walletAddress, id);
   const result = validateMove(puzzle, session, move);

@@ -1,5 +1,6 @@
-import { uploadToDB } from "@/script/puzzle-import";
 import { NextRequest, NextResponse } from "next/server";
+
+import { uploadToDB } from "@/script/puzzle-import";
 
 // GET /api/puzzles?theme=mateInOne
 // export async function GET(req: Request) {

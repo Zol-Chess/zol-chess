@@ -1,6 +1,6 @@
 import path from "path";
 
-import { clientPromise } from "@/lib/mongodb";
+import { clientPromise } from "../lib/mongodb";
 
 import { loadAndFilter } from "./puzzle-filter";
 
@@ -12,7 +12,7 @@ export const uploadToDB = async () => {
     const collection = db.collection("puzzles");
 
     const puzzles = await loadAndFilter(
-      path.join(__dirname, "lichess_db_puzzle.csv.zst")
+      path.join(process.cwd(), "../lichess_db_puzzle.csv.zst")
     );
 
     const BATCH_SIZE = 1000;
@@ -29,3 +29,5 @@ export const uploadToDB = async () => {
     await client.close();
   } catch (error) {}
 };
+
+uploadToDB();

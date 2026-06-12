@@ -18,7 +18,7 @@ export async function GET(_req: Request, { params }: Params) {
       ])
       .toArray();
 
-    return Response.json(puzzle[0]);
+    return Response.json(puzzle[0] ?? null);
   } catch (error) {
     return NextResponse.json(null);
   }

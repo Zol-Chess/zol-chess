@@ -3,17 +3,18 @@
 import { useState } from "react";
 import { lamports as sol } from "@solana/kit";
 import { toast } from "sonner";
-import { useWallet } from "./lib/wallet/context";
-import { useBalance } from "./lib/hooks/use-balance";
-import { lamportsToSolString } from "./lib/lamports";
-import { useSolanaClient } from "./lib/solana-client-context";
-import { ellipsify } from "./lib/explorer";
-import { VaultCard } from "./components/vault-card";
-import { GridBackground } from "./components/grid-background";
-import { ThemeToggle } from "./components/theme-toggle";
-import { ClusterSelect } from "./components/cluster-select";
-import { WalletButton } from "./components/wallet-button";
-import { useCluster } from "./components/cluster-context";
+
+import { useWallet } from "@/lib/wallet/context";
+import { useBalance } from "@/lib/hooks/use-balance";
+import { lamportsToSolString } from "@/lib/lamports";
+import { useSolanaClient } from "@/lib/solana-client-context";
+import { ellipsify } from "@/lib/explorer";
+import { VaultCard } from "@/components/vault-card";
+import { GridBackground } from "@/components/grid-background";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { ClusterSelect } from "@/components/cluster-select";
+import { WalletButton } from "@/components/wallet-button";
+import { useCluster } from "@/components/cluster-context";
 
 export default function Home() {
   const { wallet, status } = useWallet();

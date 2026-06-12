@@ -11,7 +11,8 @@
     "format:check": "prettier --check .",
     "lint": "eslint",
     "setup": "npm run anchor-build && npm run codama:js",
-    "start": "next start"
+    "start": "next start",
+    "import-puzzles": "tsx --env-file=.env.local --tsconfig tsconfig.scripts.json script/puzzle-import.ts"
   },
   "description": "Next.js, Tailwind, @solana/kit, Anchor vault program",
   "keywords": [
@@ -33,6 +34,7 @@
     "@wallet-standard/app": "^1.1.0",
     "@wallet-standard/base": "^1.1.0",
     "@wallet-standard/features": "^1.1.0",
+    "axios": "^1.17.0",
     "csv-parser": "^3.2.1",
     "mongodb": "^7.3.0",
     "next": "16.2.6",
@@ -56,6 +58,7 @@
     "eslint-config-next": "16.0.10",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
+    "tsx": "^4.22.4",
     "typescript": "^5"
   }
 }

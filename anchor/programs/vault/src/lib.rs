@@ -4,6 +4,12 @@ use anchor_lang::system_program::{transfer, Transfer};
 #[cfg(test)]
 mod tests;
 
+pub mod instructions;
+pub mod state;
+
+pub use instructions::*;
+pub use state::*;
+
 declare_id!("CMgmA7QCLCi8HaQqdNojQtM5BJUPF24rndQMzoqfFqn9");
 
 #[program]
@@ -11,7 +17,10 @@ pub mod vault {
     use super::*;
 
     pub fn deposit(ctx: Context<VaultAction>, amount: u64) -> Result<()> {
-        require!(ctx.accounts.vault.lamports() == 0, VaultError::VaultAlreadyExists);
+        require!(
+            ctx.accounts.vault.lamports() == 0,
+            VaultError::VaultAlreadyExists
+        );
 
         let rent = Rent::get()?.minimum_balance(0);
         require!(amount > rent, VaultError::InvalidAmount);
