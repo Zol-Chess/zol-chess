@@ -80,10 +80,10 @@ export default function DashboardPage() {
         <div className="flex flex-col md:flex-row justify-between items-center px-8 py-8 max-w-7xl mx-auto font-mono text-xs text-chess-muted tracking-widest">
           <div className="mb-4 md:mb-0">
             <span className="text-primary font-bold block mb-1 leading-short">
-              ZolChess // PROTOCOL_V1.0.0
+              ZolChess // PROTOCOL V1.0.0
             </span>
             <span className="leading-short">
-              © 2024 SYSTEM_GRID_STRATEGY. [POWERED_BY_SOLANA]
+              © 2024 SYSTEM GRID STRATEGY. [POWERED BY SOLANA]
             </span>
           </div>
           <div className="flex gap-8 uppercase">
