@@ -1,272 +1,104 @@
-"use client";
+import { TopNav } from "@/components/dashboard/top-nav";
+import { Sidebar } from "@/components/dashboard/sidebar";
 
-import { useState } from "react";
-import { lamports as sol } from "@solana/kit";
-import { toast } from "sonner";
+import Ranking from "./components/dashboard/ranking";
+import PlayerProfile from "./components/dashboard/player-profile";
+import NeuralAchievements from "./components/dashboard/neural-achievements";
+import DailyPuzzles from "./components/dashboard/daily-puzzles";
+import StatContent from "./components/dashboard/stat-content";
+import LiveActivity from "./components/dashboard/live-activity";
 
-import { useWallet } from "@/app/lib/wallet/context";
-import { useBalance } from "@/app/lib/hooks/use-balance";
-import { lamportsToSolString } from "@/app/lib/lamports";
-import { useSolanaClient } from "@/app/lib/solana-client-context";
-import { ellipsify } from "@/app/lib/explorer";
-import { VaultCard } from "@/app/components/vault-card";
-import { GridBackground } from "@/app/components/grid-background";
-import { ThemeToggle } from "@/app/components/theme-toggle";
-import { ClusterSelect } from "@/app/components/cluster-select";
-import { WalletButton } from "@/app/components/wallet-button";
-import { useCluster } from "@/app/components/cluster-context";
+/* ── Static data ────────────────────────────────────────────────── */
 
-export default function Home() {
-	const { wallet, status } = useWallet();
-	const { cluster, getExplorerUrl } = useCluster();
-	const client = useSolanaClient();
+const FOOTER_LINKS = [
+  { label: "X Twitter", href: "#" },
+  { label: "Discord Node", href: "#" },
+  { label: "Manifesto Docs", href: "#" },
+  { label: "Privacy Policy", href: "#" },
+] as const;
 
-	const address = wallet?.account.address;
-	const balance = useBalance(address);
-	const [copied, setCopied] = useState(false);
+export default function DashboardPage() {
+  return (
+    <div className="circuit-bg min-h-screen">
+      <TopNav />
+      <Sidebar />
 
-	const handleCopy = async () => {
-		if (!address) return;
-		await navigator.clipboard.writeText(address);
-		setCopied(true);
-		setTimeout(() => setCopied(false), 2000);
-	};
+      {/* Main content */}
+      <main className="ml-64 pt-24 px-8 pb-32 max-w-360 relative">
+        <div className="scanline" />
 
-	const handleAirdrop = async () => {
-		if (!address) return;
-		try {
-			toast.info("Requesting airdrop...");
-			const sig = await client.airdrop(address, sol(1_000_000_000n));
-			toast.success("Airdrop received!", {
-				description: sig ? (
-					<a
-						href={getExplorerUrl(`/tx/${sig}`)}
-						target="_blank"
-						rel="noopener noreferrer"
-						className="underline"
-					>
-						View transaction
-					</a>
-				) : undefined,
-			});
-		} catch (err) {
-			console.error("Airdrop failed:", err);
-			const msg = err instanceof Error ? err.message : String(err);
-			const isRateLimited =
-				msg.includes("429") || msg.includes("Internal JSON-RPC error");
-			toast.error(
-				isRateLimited
-					? "Devnet faucet rate-limited. Use the web faucet instead."
-					: "Airdrop failed. Try again later.",
-				isRateLimited
-					? {
-						description: (
-							<a
-								href="https://faucet.solana.com/"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="underline"
-							>
-								Open faucet.solana.com
-							</a>
-						),
-					}
-					: undefined
-			);
-		}
-	};
+        {/* Page header */}
+        <header className="mb-10 flex flex-col md:flex-row justify-between items-end gap-6 relative z-20">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <div className="h-px w-8 bg-primary" />
+              <p className="text-primary font-mono text-xs tracking-[0.3em] uppercase leading-short">
+                Welcome to ZolChess
+              </p>
+            </div>
+            <h1
+              className="text-3xl text-foreground font-bold uppercase tracking-tight leading-short"
+              style={{ fontFamily: "var(--font-space-grotesk, sans-serif)" }}
+            >
+              Player Dashboard
+            </h1>
+            <p className="font-mono text-xs text-chess-muted uppercase tracking-widest mt-1 leading-short">
+              Complete Puzzles to Earn Rewards
+            </p>
+          </div>
 
-	return (
-		<div className="relative min-h-screen bg-background text-foreground">
-			<GridBackground />
+          {/* ELO + rank */}
+          <Ranking />
+        </header>
 
-			<div className="relative z-10">
-				{/* Header */}
-				<header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-					<span className="text-sm font-semibold tracking-tight">
-						Solana Starter Kit
-					</span>
-					<div className="flex items-center gap-3">
-						<ThemeToggle />
-						<ClusterSelect />
-						<WalletButton />
-					</div>
-				</header>
+        {/* Bento grid */}
+        <div className="grid grid-cols-12 gap-6 relative z-20">
+          {/* ── Left column (8 cols) ──────────────────────────── */}
+          <div className="col-span-8 flex flex-col gap-6">
+            {/* Dossier + achievements */}
+            <div className="grid grid-cols-2 gap-6">
+              {/* Tactical Dossier */}
+              <PlayerProfile />
+              {/* Neural Achievement Grid */}
+              <NeuralAchievements />
+            </div>
 
-				<main className="mx-auto max-w-6xl px-6">
-					{/* Hero */}
-					<section className="pt-6 pb-20 md:pt-8 md:pb-32">
-						<div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-							<div>
-								<h1 className="font-black tracking-tight text-foreground">
-									<span className="block text-6xl md:text-7xl">Anchor</span>
-									<span className="block text-7xl md:text-8xl">Vault</span>
-								</h1>
-							</div>
+            {/* Stat cards */}
+            <StatContent />
+          </div>
 
-							<div className="flex max-w-2xl flex-col gap-3">
-								<p className="text-base leading-relaxed text-foreground/50">
-									This program creates a personal vault for each user using a
-									Program Derived Address (PDA). Connect your wallet, deposit
-									SOL into your vault, and withdraw it anytime. Only you can
-									access your funds.
-								</p>
-								<p className="text-sm leading-relaxed text-foreground/40">
-									The vault is an{" "}
-									<a
-										href="https://www.anchor-lang.com/docs/introduction"
-										target="_blank"
-										rel="noopener noreferrer"
-										className="underline underline-offset-2"
-									>
-										Anchor
-									</a>{" "}
-									program you can deploy to localnet or devnet and modify
-									yourself. Check the README for setup instructions.
-								</p>
-								<div className="flex flex-wrap gap-4">
-									<a
-										href="https://solana.com/docs"
-										target="_blank"
-										rel="noopener noreferrer"
-										className="inline-flex items-center gap-1 text-sm font-medium text-foreground/70 underline underline-offset-4 transition-colors hover:text-foreground"
-									>
-										Solana docs
-										<span aria-hidden="true">&rarr;</span>
-									</a>
-									<a
-										href="https://www.anchor-lang.com/docs/introduction"
-										target="_blank"
-										rel="noopener noreferrer"
-										className="inline-flex items-center gap-1 text-sm font-medium text-foreground/70 underline underline-offset-4 transition-colors hover:text-foreground"
-									>
-										Anchor docs
-										<span aria-hidden="true">&rarr;</span>
-									</a>
-									<a
-										href="https://faucet.solana.com/"
-										target="_blank"
-										rel="noopener noreferrer"
-										className="inline-flex items-center gap-1 text-sm font-medium text-foreground/70 underline underline-offset-4 transition-colors hover:text-foreground"
-									>
-										Faucet
-										<span aria-hidden="true">&rarr;</span>
-									</a>
-								</div>
-							</div>
-						</div>
-					</section>
+          {/* ── Right column (4 cols) — Daily Tactics ─────────── */}
+          <DailyPuzzles />
+        </div>
 
-					{/* Template content */}
-					<div className="space-y-10 pb-20">
-						{/* Wallet Balance */}
-						{status === "connected" && address && (
-							<section className="relative w-full overflow-hidden rounded-2xl border border-border-low bg-card px-5 py-5">
-								<div
-									className="pointer-events-none absolute inset-0 opacity-100 dark:opacity-0"
-									aria-hidden="true"
-									style={{
-										backgroundImage: `
-                      linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px)
-                    `,
-										backgroundSize: "24px 24px",
-										mask: "radial-gradient(ellipse 80% 80% at 50% 0%, black, transparent)",
-										WebkitMask:
-											"radial-gradient(ellipse 80% 80% at 50% 0%, black, transparent)",
-									}}
-								/>
-								<div
-									className="pointer-events-none absolute inset-0 opacity-0 dark:opacity-100"
-									aria-hidden="true"
-									style={{
-										backgroundImage: `
-                      linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px)
-                    `,
-										backgroundSize: "24px 24px",
-										mask: "radial-gradient(ellipse 80% 80% at 50% 0%, black, transparent)",
-										WebkitMask:
-											"radial-gradient(ellipse 80% 80% at 50% 0%, black, transparent)",
-									}}
-								/>
-								<div className="relative flex items-center justify-between">
-									<div className="flex items-center gap-3">
-										<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cream">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												viewBox="0 0 24 24"
-												fill="none"
-												stroke="currentColor"
-												strokeWidth="1.5"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												className="h-4 w-4 text-foreground/70"
-											>
-												<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
-												<path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
-												<path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
-											</svg>
-										</div>
-										<span className="text-sm font-medium">Wallet Balance</span>
-										<button
-											onClick={handleCopy}
-											className="flex cursor-pointer items-center gap-1.5 font-mono text-xs text-muted transition hover:text-foreground"
-										>
-											{ellipsify(address, 4)}
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												viewBox="0 0 24 24"
-												fill="none"
-												stroke="currentColor"
-												strokeWidth="2"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												className="h-3 w-3"
-											>
-												{copied ? (
-													<path d="M20 6 9 17l-5-5" />
-												) : (
-													<>
-														<rect
-															width="14"
-															height="14"
-															x="8"
-															y="8"
-															rx="2"
-															ry="2"
-														/>
-														<path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-													</>
-												)}
-											</svg>
-										</button>
-									</div>
-									{cluster !== "mainnet" && (
-										<button
-											onClick={handleAirdrop}
-											className="cursor-pointer rounded-lg border border-border-low px-3 py-1.5 text-xs font-medium transition hover:bg-cream"
-										>
-											Airdrop
-										</button>
-									)}
-								</div>
-								<p className="relative mt-4 font-mono text-4xl font-bold tabular-nums tracking-tight">
-									{balance.lamports != null
-										? lamportsToSolString(balance.lamports)
-										: "\u2014"}
-									<span className="ml-1.5 text-lg font-normal text-muted">
-										SOL
-									</span>
-								</p>
-							</section>
-						)}
+        {/* ── Live Activity Feed ────────────────────────────────── */}
+        <LiveActivity />
+      </main>
 
-						{/* Vault Program Section */}
-						<VaultCard />
-					</div>
-				</main>
-			</div>
-		</div>
-	);
+      {/* ── Footer ──────────────────────────────────────────────── */}
+      <footer className="ml-64 border-t border-primary/20 bg-chess-bg/80 backdrop-blur-sm w-[calc(100%-256px)]">
+        <div className="flex flex-col md:flex-row justify-between items-center px-8 py-8 max-w-7xl mx-auto font-mono text-xs text-chess-muted tracking-widest">
+          <div className="mb-4 md:mb-0">
+            <span className="text-primary font-bold block mb-1 leading-short">
+              ZolChess // PROTOCOL V1.0.0
+            </span>
+            <span className="leading-short">
+              © 2024 SYSTEM GRID STRATEGY. [POWERED BY SOLANA]
+            </span>
+          </div>
+          <div className="flex gap-8 uppercase">
+            {FOOTER_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="hover:text-primary transition-colors leading-short"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
 }
