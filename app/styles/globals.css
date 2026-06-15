@@ -135,6 +135,16 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
+  /* Chess dashboard tokens */
+  --color-chess-bg: #0d0d17;
+  --color-chess-surface: #12121d;
+  --color-chess-container: #1b1b25;
+  --color-chess-container-hi: #232333;
+  --color-chess-muted: #bacbbc;
+  --color-board-light: #393844;
+  --color-board-dark: #1b1b25;
+  --font-display: var(--font-space-grotesk, "Space Grotesk"), sans-serif;
+
   /* primary palette */
   --color-primary: var(--primary);
   --color-primary-100: var(--primary-100);
@@ -218,6 +228,68 @@
   --breakpoint-sm: 30rem;
   --breakpoint-xs: 22.5rem;
 }
+
+/* ── Chess Dashboard Custom Classes ─────────────────────────────── */
+
+.circuit-bg {
+  background-color: #0d0d17;
+  background-image:
+    radial-gradient(rgba(20, 241, 149, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 241, 149, 0.03) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(20, 241, 149, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px, 40px 40px;
+  background-position: center center;
+}
+
+.glass-panel {
+  background: rgba(27, 27, 37, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(20, 241, 149, 0.2);
+  position: relative;
+}
+
+.glass-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(20, 241, 149, 0.5), transparent);
+}
+
+.neon-border {
+  box-shadow: 0 0 15px rgba(20, 241, 149, 0.1), inset 0 0 10px rgba(20, 241, 149, 0.05);
+  border: 1px solid rgba(20, 241, 149, 0.3);
+}
+
+.glow-text-green {
+  text-shadow: 0 0 10px rgba(20, 241, 149, 0.6), 0 0 20px rgba(20, 241, 149, 0.4);
+}
+
+.scanline {
+  width: 100%;
+  height: 100px;
+  z-index: 10;
+  background: linear-gradient(
+    0deg,
+    rgba(20, 241, 149, 0) 0%,
+    rgba(20, 241, 149, 0.03) 50%,
+    rgba(20, 241, 149, 0) 100%
+  );
+  position: absolute;
+  top: -100px;
+  left: 0;
+  pointer-events: none;
+  animation: scan 8s linear infinite;
+}
+
+@keyframes scan {
+  0% { top: -100px; }
+  100% { top: 100%; }
+}
+
+/* ── Base Layer ──────────────────────────────────────────────────── */
 
 @layer base {
   * {
