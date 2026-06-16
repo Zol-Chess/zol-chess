@@ -14,12 +14,7 @@ export default async function PuzzlePage({
 
   return (
     <div className="circuit-bg min-h-screen">
-      <TopNav />
-      <Sidebar />
-
       <PuzzleByIdWrapper id={id} />
-
-      <Footer />
     </div>
   );
 }

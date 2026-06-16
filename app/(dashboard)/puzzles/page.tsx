@@ -8,12 +8,7 @@ import "@/styles/chess-puzzle.css";
 export default function PuzzlesPage() {
   return (
     <div className="circuit-bg min-h-screen">
-      <TopNav />
-      <Sidebar />
-
       <PuzzlesWrapper />
-
-      <Footer />
     </div>
   );
 }

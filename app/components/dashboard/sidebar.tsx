@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+
+import { useAuthStore } from "@/state/auth";
 
 const NAV_ITEMS = [
   { icon: "dashboard", label: "DASHBOARD", route: "/" },
@@ -16,10 +17,9 @@ const PROFILE_IMG =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuAaK5NsNyA8cPvbHFL-KkSEIH9Qpm4OaCx09AzzBKtgqupbojAeJl88_vewYpvd92YE7th9y_FjrX2Ek40hJolZRDEXkgFB4_NsIH_xcLOXgQhkrVXrHvB8FVkbBk8sxiJQM9CBh-gB8Hkg1ssDVBLwBQNzSBvTWwh6wRnYJ_dMJ_hprx01rN4t3WoJ66BMXdFPttwurgWw8fJT4PJiK2tWQfpQdgtbk5wRKs-ZdTIdV9Yd16ewebvcndMnNkwDVrkyeWL8d3u-oYU";
 
 export function Sidebar() {
-  const [navItems, setNavItems] = useState(NAV_ITEMS);
-  const [playerNumber, setPlayerNumber] = useState(1);
-
   const pathname = usePathname();
+
+  const user = useAuthStore((state) => state.user);
 
   return (
     <aside className="fixed left-0 top-16 h-[calc(100vh-64px)] w-64 bg-chess-container/50 border-r border-primary/20 flex flex-col py-6 backdrop-blur-sm z-40">
@@ -37,7 +37,7 @@ export function Sidebar() {
           className="font-bold text-md text-primary uppercase leading-short mb-1"
           style={{ fontFamily: "var(--font-space-grotesk, sans-serif)" }}
         >
-          PLAYER #{playerNumber}
+          PLAYER #{user?.player_rating}
         </h3>
         <p className="font-mono text-xs text-chess-muted uppercase tracking-widest flex items-center gap-1 leading-short">
           <span className="w-1 h-1 bg-primary rounded-full" />
@@ -48,7 +48,7 @@ export function Sidebar() {
       {/* Navigation — flex-1 + min-h-0 lets overflow-y-auto actually scroll */}
       <nav className="flex-1 min-h-0 overflow-y-auto">
         <div className="space-y-1">
-          {navItems.map((item) => (
+          {NAV_ITEMS.map((item) => (
             <Link
               key={item.label}
               href={item.route}
@@ -80,7 +80,7 @@ export function Sidebar() {
           { icon: "settings", label: "Settings" },
           { icon: "help", label: "Support" },
         ].map((link) => (
-          <a
+          <Link
             key={link.label}
             href="#"
             className="flex items-center gap-4 text-chess-muted hover:text-primary transition-colors"
@@ -91,7 +91,7 @@ export function Sidebar() {
             <span className="font-mono text-xs uppercase tracking-widest leading-short">
               {link.label}
             </span>
-          </a>
+          </Link>
         ))}
       </footer>
     </aside>
