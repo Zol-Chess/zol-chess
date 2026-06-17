@@ -1,0 +1,25 @@
+import { TopNav } from "@/components/dashboard/top-nav";
+import { Sidebar } from "@/components/dashboard/sidebar";
+import Footer from "@/components/footer";
+import PuzzleByIdWrapper from "@/components/puzzle/puzzle-by-id-wrapper";
+
+import "@/styles/chess-puzzle.css";
+
+export default async function PuzzlePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
+  return (
+    <div className="circuit-bg min-h-screen">
+      <TopNav />
+      <Sidebar />
+
+      <PuzzleByIdWrapper id={id} />
+
+      <Footer />
+    </div>
+  );
+}
