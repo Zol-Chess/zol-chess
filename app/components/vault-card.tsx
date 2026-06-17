@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useWallet } from "../lib/wallet/context";
+import { useWalletValues } from "../lib/wallet/context";
 import { useSendTransaction } from "../lib/hooks/use-send-transaction";
 import { useBalance } from "../lib/hooks/use-balance";
 import { lamportsFromSol, lamportsToSolString } from "../lib/lamports";
@@ -16,7 +16,7 @@ import { parseTransactionError } from "../lib/errors";
 import { useCluster } from "./cluster-context";
 
 export function VaultCard() {
-  const { wallet, signer, status } = useWallet();
+  const { wallet, signer, status } = useWalletValues();
   const { send, isSending } = useSendTransaction();
   const { getExplorerUrl } = useCluster();
 

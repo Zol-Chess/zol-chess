@@ -1,6 +1,6 @@
 import path from "path";
 
-import { clientPromise } from "../lib/mongodb";
+import { clientPromise } from "@/lib/mongodb";
 
 import { loadAndFilter } from "./puzzle-filter";
 

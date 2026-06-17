@@ -1,14 +1,25 @@
 "use client";
 
 import { createContext, useContext, useMemo, type ReactNode } from "react";
-import { createSolanaClient, type SolanaClient } from "./solana-client";
+import { createSolanaClient, type SolanaClient, type ClusterMoniker } from "./solana-client";
 import { useCluster } from "../components/cluster-context";
 
 const SolanaClientContext = createContext<SolanaClient | null>(null);
 
+// Module-level cache so the WebSocket transport is created once per cluster,
+// not once per render cycle (which would accumulate close listeners).
+const clientCache = new Map<ClusterMoniker, SolanaClient>();
+
+function getOrCreateClient(cluster: ClusterMoniker): SolanaClient {
+  if (!clientCache.has(cluster)) {
+    clientCache.set(cluster, createSolanaClient(cluster));
+  }
+  return clientCache.get(cluster)!;
+}
+
 export function SolanaClientProvider({ children }: { children: ReactNode }) {
   const { cluster } = useCluster();
-  const client = useMemo(() => createSolanaClient(cluster), [cluster]);
+  const client = useMemo(() => getOrCreateClient(cluster), [cluster]);
 
   return (
     <SolanaClientContext.Provider value={client}>

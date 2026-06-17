@@ -5,6 +5,12 @@ import { useAuthStore } from "@/state/auth";
 import { ChessBoardPreview } from "./chess-board-preview";
 import { GlassPanel } from "./glass-panel";
 import { SectionHeader } from "./section-header";
+import { usePuzzleStore } from "@/state/puzzle";
+import { getRandomPuzzles } from "@/services/puzzle.ts";
+import { showToast } from "@/lib/toast";
+import { catchErr } from "@/utils/error-handlers";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 function SolanaIcon({ className = "" }: { className?: string }) {
   return (
@@ -20,7 +26,31 @@ function SolanaIcon({ className = "" }: { className?: string }) {
 }
 
 const DailyPuzzles = () => {
+  const [loading, setLoading] = useState(false);
+
   const user = useAuthStore((state) => state.user);
+  const setPuzzles = usePuzzleStore((state) => state.updatePuzzleList);
+
+  const router = useRouter();
+
+  const getPuzzles = async () => {
+    try {
+      setLoading(true);
+      const puzzles = await getRandomPuzzles(user?.player_rating ?? 800, 5);
+
+      if (!puzzles.length) {
+        showToast("No puzzles available right now. Please try again later.");
+        return;
+      }
+
+      setPuzzles(puzzles);
+      router.push(`/puzzles/${puzzles[0].id}`);
+    } catch (error) {
+      showToast(catchErr(error).message ?? "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="col-span-4">
@@ -57,8 +87,12 @@ const DailyPuzzles = () => {
           </div>
         </div>
 
-        <button className="mt-auto w-full py-4 bg-primary text-chess-bg font-mono font-bold text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(20,241,149,0.3)] hover:brightness-110 active:scale-95 transition-all border border-primary/40 leading-short">
-          Start Puzzle
+        <button
+          className="mt-auto w-full py-4 bg-primary text-chess-bg font-mono font-bold text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(20,241,149,0.3)] hover:brightness-110 active:scale-95 transition-all border border-primary/40 leading-short disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
+          onClick={getPuzzles}
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Start Puzzle"}
         </button>
       </GlassPanel>
     </div>
