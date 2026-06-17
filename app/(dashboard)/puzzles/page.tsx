@@ -1,6 +1,3 @@
-import { TopNav } from "@/components/dashboard/top-nav";
-import { Sidebar } from "@/components/dashboard/sidebar";
-import Footer from "@/components/footer";
 import PuzzlesWrapper from "@/components/puzzle/puzzles-wrapper";
 
 import "@/styles/chess-puzzle.css";

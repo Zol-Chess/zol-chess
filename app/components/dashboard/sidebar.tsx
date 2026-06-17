@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { useAuthStore } from "@/state/auth";
+import { difficultyLabel } from "@/utils/resolvers";
 
 const NAV_ITEMS = [
   { icon: "dashboard", label: "DASHBOARD", route: "/" },
@@ -40,8 +41,8 @@ export function Sidebar() {
           PLAYER #{user?.player_rating}
         </h3>
         <p className="font-mono text-xs text-chess-muted uppercase tracking-widest flex items-center gap-1 leading-short">
-          <span className="w-1 h-1 bg-primary rounded-full" />
-          Grandmaster.v4
+          <span className="w-1 h-1 bg-primary rounded-full capitalize" />
+          {difficultyLabel(user?.player_rating ?? 400)}
         </p>
       </div>
 

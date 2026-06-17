@@ -11,19 +11,12 @@ import { useChessMoves } from "@/hooks/use-chess-moves";
 import { catchErr } from "@/utils/error-handlers";
 import { usePuzzleStore } from "@/state/puzzle";
 import { useAuthStore } from "@/state/auth";
+import { difficultyLabel } from "@/utils/resolvers";
 
 import { EngineLog, MoveEntry } from "../dashboard/engine-log";
 import { ChessBoard } from "../chess/chess-board";
 import { PuzzleActionBar } from "../dashboard/puzzle-action-bar";
 import { TacticalDossier } from "../dashboard/tactical-dossier";
-
-function difficultyLabel(rating: number): string {
-  if (rating < 1000) return "NOVICE";
-  if (rating < 1400) return "INTERMEDIATE";
-  if (rating < 1800) return "ADVANCED";
-  if (rating < 2200) return "EXPERT";
-  return "MASTER";
-}
 
 function uciToLabel(uci: string): string {
   return `${uci.slice(0, 2).toUpperCase()}→${uci.slice(2, 4).toUpperCase()}`;
@@ -181,7 +174,10 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
       setPuzzles(puzzles);
       router.push(`/puzzles/${puzzles[0].id}`);
     } catch (error) {
-      showToast(catchErr(error).message ?? "Failed to load next puzzle.", "error");
+      showToast(
+        catchErr(error).message ?? "Failed to load next puzzle.",
+        "error"
+      );
     }
   }
 
@@ -189,7 +185,10 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
     if (!puzzle) return;
 
     if (!puzzleSolved) {
-      showToast("Complete the puzzle first — find the correct sequence of moves.", "warning");
+      showToast(
+        "Complete the puzzle first — find the correct sequence of moves.",
+        "warning"
+      );
       return;
     }
 
@@ -203,7 +202,10 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
       showToast("Solution submitted! Loading next puzzle...", "success");
       setTimeout(() => goToNextPuzzle(), 1500);
     } catch (error) {
-      showToast(catchErr(error).message ?? "Submission failed. Please try again.", "error");
+      showToast(
+        catchErr(error).message ?? "Submission failed. Please try again.",
+        "error"
+      );
     } finally {
       setSubmitting(false);
     }
@@ -256,10 +258,14 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
                   key={move.number}
                   className={`flex gap-4 ${move.active ? "text-foreground" : ""}`}
                 >
-                  <span className={`w-8 shrink-0 ${move.active ? "text-primary" : ""}`}>
+                  <span
+                    className={`w-8 shrink-0 ${move.active ? "text-primary" : ""}`}
+                  >
                     {String(move.number).padStart(2, "0")}.
                   </span>
-                  <span className={`w-32 shrink-0 ${move.active ? "font-bold" : ""}`}>
+                  <span
+                    className={`w-32 shrink-0 ${move.active ? "font-bold" : ""}`}
+                  >
                     {move.white}
                   </span>
                   <span>{move.black ?? "_"}</span>
@@ -307,7 +313,10 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
             walletSig="4aXz...9P1s"
             walletBalance="12.45 SOL"
           />
-          <EngineLog moves={moveLog} onViewHistory={() => setShowHistory(true)} />
+          <EngineLog
+            moves={moveLog}
+            onViewHistory={() => setShowHistory(true)}
+          />
         </div>
       </div>
     </main>
