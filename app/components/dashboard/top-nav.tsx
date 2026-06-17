@@ -4,19 +4,28 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { lamports as sol } from "@solana/kit";
 
-import { useWallet } from "@/lib/wallet/context";
+import { useWalletValues, WalletStatus } from "@/lib/wallet/context";
 import { useSolanaClient } from "@/lib/solana-client-context";
 import { useBalance } from "@/lib/hooks/use-balance";
+import { useAuthStore } from "@/state/auth";
 
 import { useCluster } from "../cluster-context";
+
+const WalletConnectionState: Partial<Record<WalletStatus, string>> = {
+  connected: "Wallet Connected",
+  disconnected: "Connected Wallet",
+  connecting: "Connecting Wallet",
+  error: "Connection Failed",
+};
 
 export function TopNav() {
   const [tps, setTps] = useState(3532);
   const [solEarned, setSolEarned] = useState(0);
 
-  const { wallet, status } = useWallet();
+  const { wallet, connect, disconnect } = useWalletValues();
   const { cluster, getExplorerUrl } = useCluster();
   const client = useSolanaClient();
+  const status = useAuthStore((state) => state.walletStatus);
 
   const address = wallet?.account.address;
   const balance = useBalance(address);
@@ -82,6 +91,12 @@ export function TopNav() {
     return () => clearInterval(id);
   }, []);
 
+  const handleWalletConnection = async () => {
+    try {
+      await connect();
+    } catch (error) {}
+  };
+
   return (
     <header className="fixed top-0 w-full z-50 bg-chess-bg/90 backdrop-blur-md border-b border-primary/30">
       <div className="flex items-center justify-between px-8 h-16 max-w-7xl mx-auto">
@@ -135,8 +150,19 @@ export function TopNav() {
               Player #7241
             </span>
           </div>
-          <button className="bg-primary text-chess-bg px-6 py-2 font-bold hover:shadow-[0_0_15px_rgba(20,241,149,0.5)] transition-all uppercase font-mono text-xs tracking-widest leading-short">
-            Connect Wallet
+          <button
+            className="bg-primary text-chess-bg px-6 py-2 font-bold hover:shadow-[0_0_15px_rgba(20,241,149,0.5)] cursor-pointer transition-all uppercase font-mono text-xs tracking-widest leading-short flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+            onClick={
+              status === "disconnected" || status === "error"
+                ? handleWalletConnection
+                : disconnect
+            }
+            disabled={status === "connecting"}
+          >
+            {status === "connecting" && (
+              <span className="w-3 h-3 border-2 border-chess-bg border-t-transparent rounded-full animate-spin" />
+            )}
+            {(status && WalletConnectionState[status]) ?? "Connect Wallet"}
           </button>
         </div>
       </div>

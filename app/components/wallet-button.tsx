@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useWallet } from "../lib/wallet/context";
+import { useWalletValues } from "../lib/wallet/context";
 import { useBalance } from "../lib/hooks/use-balance";
 import { lamportsToSolString } from "../lib/lamports";
 import { ellipsify } from "../lib/explorer";
@@ -9,7 +9,7 @@ import { useCluster } from "./cluster-context";
 
 export function WalletButton() {
   const { connectors, connect, disconnect, wallet, status, error } =
-    useWallet();
+    useWalletValues();
 
   const { getExplorerUrl } = useCluster();
   const [isOpen, setIsOpen] = useState(false);

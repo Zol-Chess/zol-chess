@@ -229,18 +229,6 @@
   --breakpoint-xs: 22.5rem;
 }
 
-/* ── Chess Dashboard Custom Classes ─────────────────────────────── */
-
-.circuit-bg {
-  background-color: #0d0d17;
-  background-image:
-    radial-gradient(rgba(20, 241, 149, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(20, 241, 149, 0.03) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(20, 241, 149, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px, 40px 40px, 40px 40px;
-  background-position: center center;
-}
-
 .glass-panel {
   background: rgba(27, 27, 37, 0.7);
   backdrop-filter: blur(16px);
