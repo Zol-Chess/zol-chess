@@ -19,7 +19,7 @@ function Ranking() {
       </GlassPanel>
       <GlassPanel className="p-5 min-w-40">
         <span className="block font-mono text-xs text-chess-muted uppercase tracking-widest mb-2 border-b border-primary/20 pb-1 leading-short">
-          Rank_Global
+          Global Rank
         </span>
         <span className="block font-mono text-h6 text-foreground font-bold leading-short">
           #{user?.global_rank ?? "---"}

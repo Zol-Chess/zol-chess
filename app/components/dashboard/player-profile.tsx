@@ -31,13 +31,13 @@ function PlayerProfile() {
         >
           Puzzle Rating: #{user?.puzzle_rating ?? "---"}
         </h3>
-        {user?.achievements.length && (
+        {user?.achievements?.length && (
           <p className="font-mono text-xs text-chess-muted uppercase tracking-widest mb-6 leading-short">
             Achievements
           </p>
         )}
         <div className="flex flex-wrap justify-center gap-2">
-          {user?.achievements.map((tag) => (
+          {user?.achievements?.map((tag) => (
             <span
               key={tag}
               className="px-3 py-1 bg-primary/10 border border-primary/30 text-primary font-mono text-xs uppercase tracking-wider leading-short"

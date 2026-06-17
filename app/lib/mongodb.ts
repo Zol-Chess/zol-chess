@@ -7,7 +7,7 @@ let clientPromise: Promise<MongoClient>;
 
 function runDB() {
   if (!global._mongoClientPromise) {
-    client = new MongoClient(uri);
+    client = client = new MongoClient(uri, { tls: true });
     global._mongoClientPromise = client.connect();
   }
 

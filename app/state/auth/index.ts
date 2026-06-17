@@ -9,9 +9,9 @@ import { AuthState } from "./auth.types";
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      isWalletConnected: false,
-      connectWallet: () => {},
-      disconnectWallet: () => {},
+      setWalletSession(details) {
+        return set({ ...details });
+      },
     }),
     {
       name: STORED_KEYS.auth,
