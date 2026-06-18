@@ -4,17 +4,43 @@ use anchor_lang::system_program::{transfer, Transfer};
 #[cfg(test)]
 mod tests;
 
+pub mod constants;
+pub mod errors;
 pub mod instructions;
 pub mod state;
 
+pub use constants::*;
+pub use errors::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("CMgmA7QCLCi8HaQqdNojQtM5BJUPF24rndQMzoqfFqn9");
+declare_id!("5ZAQpJNP5wEgxiHGHT1SumsfpxJ1VTJhp6YFnPckXZRR");
 
 #[program]
-pub mod vault {
+pub mod zol_chess_program {
     use super::*;
+
+    pub fn initialize_user(ctx: Context<InitialzeAccount>) -> Result<()> {
+        ctx.accounts.init(ctx.bumps)
+    }
+
+    pub fn submit_puzzle(
+        ctx: Context<SubmitPuzzle>,
+        puzzle_id: String,
+        puzzle_rating: u32,
+        time_taken: u32,
+        solved: bool,
+        attempts: u8,
+    ) -> Result<()> {
+        ctx.accounts.submit(
+            ctx.bumps,
+            puzzle_id,
+            puzzle_rating,
+            time_taken,
+            solved,
+            attempts,
+        )
+    }
 
     pub fn deposit(ctx: Context<VaultAction>, amount: u64) -> Result<()> {
         require!(

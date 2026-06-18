@@ -3,11 +3,11 @@ import { GlassPanel } from "./glass-panel";
 import { SectionHeader } from "./section-header";
 
 const ACHIEVEMENTS = [
-  { icon: "swords", label: "First Solve", unlocked: true },
-  { icon: "bolt", label: "10 Puzzle Streak", unlocked: true },
-  { icon: "dark_mode", label: "100 Puzzles Solved", unlocked: true },
-  { icon: "lock", label: "Grandmaster", unlocked: false },
-  { icon: "lock", label: "Endgame Master", unlocked: false },
+  { icon: "swords", label: "First Solve", bit: 0, unlocked: true },
+  { icon: "bolt", label: "10 Puzzle Streak", bit: 1, unlocked: true },
+  { icon: "dark_mode", label: "100 Puzzles Solved", bit: 2, unlocked: true },
+  { icon: "lock", label: "Grandmaster", bit: 3, unlocked: false },
+  { icon: "lock", label: "Endgame Master", bit: 4, unlocked: false },
 ] as const;
 
 function NeuralAchievements() {
