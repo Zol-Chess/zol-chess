@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
 
   const rating = Number(searchParams.get("rating") ?? 800);
   const count = Math.min(Number(searchParams.get("count") ?? 10), 50);
+  const playerPubkey = searchParams.get("player") ?? "";
 
   try {
     const client = await clientPromise;
@@ -57,7 +58,7 @@ export async function GET(req: NextRequest) {
         const puzzleId = rest.puzzleId as string;
 
         const encrypted = await encryptSolution(movesJson, puzzleId);
-        const signature = await signSolution(movesJson, puzzleId);
+        const signature = await signSolution(puzzleId, playerPubkey);
 
         return {
           id: _id.toString(),

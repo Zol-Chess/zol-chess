@@ -4,8 +4,8 @@
 resolution = true
 skip-lint = false
 
-[programs.devnet]
-vault = "CMgmA7QCLCi8HaQqdNojQtM5BJUPF24rndQMzoqfFqn9"
+[programs.localnet]
+zol_chess = "4DbgpcAxF7u3Uf2T2obBLZXuHZCECnG3mEjrgxxqFr5K"
 
 [provider]
 cluster = "localnet"

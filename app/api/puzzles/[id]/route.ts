@@ -7,8 +7,9 @@ import { catchErr } from "@/utils/error-handlers";
 
 type Params = { params: Promise<{ id: string }> };
 
-export async function GET(_req: Request, { params }: Params) {
+export async function GET(req: Request, { params }: Params) {
   const { id } = await params;
+  const playerPubkey = new URL(req.url).searchParams.get("player") ?? "";
 
   try {
     const client = await clientPromise;
@@ -33,7 +34,7 @@ export async function GET(_req: Request, { params }: Params) {
     const puzzleId = rest.puzzleId as string;
 
     const encrypted = await encryptSolution(movesJson, puzzleId);
-    const signature = await signSolution(movesJson, puzzleId);
+    const signature = await signSolution(puzzleId, playerPubkey);
 
     return NextResponse.json({
       id: _id.toString(),
