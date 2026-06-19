@@ -1,25 +1,12 @@
 import { GlassPanel } from "./glass-panel";
 import { SectionHeader } from "./section-header";
 
-function SolanaIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="currentColor"
-      viewBox="0 0 397 311"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M64.6 237.9c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7zM64.6 3.8C67.1 1.4 70.4 0 73.8 0h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1L64.6 3.8zM332.3 120.9c2.4-2.4 5.7-3.8 9.2-3.8H24c-5.8 0-8.7 7-4.6 11.1l62.7 62.7c2.4 2.4 5.7 3.8 9.2 3.8h317.4c5.8 0 8.7-7 4.6-11.1l-62.7-62.7z" />
-    </svg>
-  );
-}
-
 type TacticalDossierProps = {
   puzzleId: string;
   objective: string;
   threatLevel: string;
   eloIndex: number;
-  solReward: string;
+  playerColor: string | null;
   walletSig: string;
   walletBalance: string;
 };
@@ -29,7 +16,7 @@ export function TacticalDossier({
   objective,
   threatLevel,
   eloIndex,
-  solReward,
+  playerColor,
   walletSig,
   walletBalance,
 }: TacticalDossierProps) {
@@ -76,11 +63,19 @@ export function TacticalDossier({
         </div>
         <div className="flex justify-between items-center py-2 border-b border-primary/10">
           <span className="text-chess-muted text-xs uppercase tracking-widest leading-short">
-            Win Reward
+            Player Color
           </span>
-          <div className="flex items-center gap-1 text-primary">
-            <SolanaIcon className="w-3 h-3" />
-            <span className="text-sm font-bold leading-short">{solReward}</span>
+          <div className="flex items-center gap-2">
+            <div
+              className={`w-3 h-3 border ${
+                playerColor === "WHITE"
+                  ? "bg-white border-primary/40"
+                  : "bg-chess-bg border-primary/40"
+              }`}
+            />
+            <span className="text-sm text-primary font-bold leading-short">
+              {playerColor ?? "—"}
+            </span>
           </div>
         </div>
       </div>

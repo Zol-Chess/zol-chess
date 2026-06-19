@@ -1,16 +1,16 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { useAuthStore } from "@/state/auth";
-
-import { ChessBoardPreview } from "./chess-board-preview";
-import { GlassPanel } from "./glass-panel";
-import { SectionHeader } from "./section-header";
 import { usePuzzleStore } from "@/state/puzzle";
 import { getRandomPuzzles } from "@/services/puzzle.ts";
 import { showToast } from "@/lib/toast";
 import { catchErr } from "@/utils/error-handlers";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+
+import { ChessBoardPreview } from "./chess-board-preview";
+import { GlassPanel } from "./glass-panel";
+import { SectionHeader } from "./section-header";
 
 function SolanaIcon({ className = "" }: { className?: string }) {
   return (
@@ -29,12 +29,16 @@ const DailyPuzzles = () => {
   const [loading, setLoading] = useState(false);
 
   const user = useAuthStore((state) => state.user);
+  const walletStatus = useAuthStore((state) => state.walletStatus);
   const setPuzzles = usePuzzleStore((state) => state.updatePuzzleList);
 
   const router = useRouter();
 
   const getPuzzles = async () => {
     try {
+      if (walletStatus !== "connected") {
+        throw Error("Please connect your wallet to continue");
+      }
       setLoading(true);
       const puzzles = await getRandomPuzzles(user?.player_rating ?? 800, 5);
 
@@ -46,7 +50,9 @@ const DailyPuzzles = () => {
       setPuzzles(puzzles);
       router.push(`/puzzles/${puzzles[0].id}`);
     } catch (error) {
-      showToast(catchErr(error).message ?? "Something went wrong. Please try again.");
+      showToast(
+        catchErr(error).message ?? "Something went wrong. Please try again."
+      );
     } finally {
       setLoading(false);
     }

@@ -1,37 +1,43 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { useRouter } from "next/navigation";
 
 import { Puzzle } from "@/services/puzzle.ts/puzzle.types";
-import { submitSolution, getRandomPuzzles } from "@/services/puzzle.ts";
+import { getRandomPuzzles } from "@/services/puzzle.ts";
 import { showToast } from "@/lib/toast";
-import { useChessMoves } from "@/hooks/use-chess-moves";
+import { useChessMoves } from "@/lib/hooks/use-chess-moves";
 import { catchErr } from "@/utils/error-handlers";
 import { usePuzzleStore } from "@/state/puzzle";
 import { useAuthStore } from "@/state/auth";
 import { difficultyLabel } from "@/utils/resolvers";
+import { useSendTransaction } from "@/lib/hooks/use-send-transaction";
 
 import { EngineLog, MoveEntry } from "../dashboard/engine-log";
 import { ChessBoard } from "../chess/chess-board";
 import { PuzzleActionBar } from "../dashboard/puzzle-action-bar";
 import { TacticalDossier } from "../dashboard/tactical-dossier";
+import { getSubmitPuzzleInstructionAsync } from "@/generated/zol_chess_program";
+import { TransactionSigner } from "@solana/kit";
 
 function uciToLabel(uci: string): string {
   return `${uci.slice(0, 2).toUpperCase()}→${uci.slice(2, 4).toUpperCase()}`;
 }
 
 interface MainPlayProps {
+  signer?: TransactionSigner;
   puzzle: Puzzle | null;
   isLoading: boolean;
 }
 
-const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
+const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
   const router = useRouter();
   const encryptedPuzzles = usePuzzleStore((s) => s.encryptedPuzzles);
   const setPuzzles = usePuzzleStore((s) => s.updatePuzzleList);
   const user = useAuthStore((s) => s.user);
+  const { send } = useSendTransaction();
+  const startTimeRef = useRef<number>(Date.now());
 
   const [moveLog, setMoveLog] = useState<MoveEntry[]>([]);
   const [incorrectCount, setIncorrectCount] = useState(0);
@@ -39,8 +45,6 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
   const [showHistory, setShowHistory] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // Lichess format: moves[0] is the opponent's trigger move (FEN is before it).
-  // Apply it to get the playing position; slice the rest as solutionMoves.
   const boardData = useMemo(() => {
     if (!puzzle?.moves?.length) return null;
 
@@ -68,6 +72,7 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
       fen: chess.fen(),
       lastMove: { from, to },
       solutionMoves,
+      playerColor,
       objective: `${theme} IN ${movesToWin} // ${playerColor} TO MOVE`,
       threatLevel: difficultyLabel(puzzle.rating),
       initialLog: [
@@ -123,6 +128,7 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
     setIncorrectCount(0);
     setPuzzleSolved(false);
     setShowHistory(false);
+    startTimeRef.current = Date.now();
   }, [boardData]);
 
   function handleGetHint() {
@@ -166,7 +172,11 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
 
     // No more puzzles in the list — fetch a fresh random batch
     try {
-      const puzzles = await getRandomPuzzles(user?.player_rating ?? 800, 5);
+      const puzzles = await getRandomPuzzles(
+        user?.player_rating ?? 800,
+        5,
+        signer?.address ?? ""
+      );
       if (!puzzles.length) {
         showToast("No more puzzles available right now.", "warning");
         return;
@@ -192,12 +202,33 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
       return;
     }
 
+    if (!signer) {
+      showToast("Connect your wallet to submit.", "warning");
+      return;
+    }
+
     try {
       setSubmitting(true);
 
-      if (puzzle.solutionSignature) {
-        await submitSolution(puzzle.puzzleId, puzzle.solutionSignature);
-      }
+      const timeTaken = Math.floor((Date.now() - startTimeRef.current) / 1000);
+
+      if (!puzzle.solutionSignature) return;
+
+      const sigBytes = Uint8Array.from(
+        puzzle.solutionSignature.match(/.{1,2}/g)!.map((b) => parseInt(b, 16))
+      );
+
+      const ix = await getSubmitPuzzleInstructionAsync({
+        authority: signer,
+        puzzleId: puzzle.puzzleId,
+        puzzleRating: puzzle.rating,
+        timeTaken,
+        solved: true,
+        attempts: incorrectCount,
+        solutionSignature: sigBytes,
+      });
+
+      await send({ instructions: [ix] });
 
       showToast("Solution submitted! Loading next puzzle...", "success");
       setTimeout(() => goToNextPuzzle(), 1500);
@@ -222,7 +253,7 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
   }
 
   return (
-    <main className="ml-64 pt-24 px-8 pb-12 max-w-360 relative">
+    <main className="ml-64 pt-24 pl-4 pr-8 pb-12 max-w-360 relative">
       <div className="scanline" />
 
       {puzzleSolved && (
@@ -276,7 +307,7 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
         </div>
       )}
 
-      <div className="grid grid-cols-12 gap-8 relative z-20">
+      <div className="grid grid-cols-12 gap-4 relative z-20">
         {/* ── Left column — board + actions (8 cols) ─────────── */}
         <div className="col-span-8 flex flex-col gap-6">
           {boardData?.fen && (
@@ -309,7 +340,7 @@ const MainPlay = ({ puzzle, isLoading }: MainPlayProps) => {
             objective={boardData?.objective ?? "LOADING..."}
             threatLevel={boardData?.threatLevel ?? "—"}
             eloIndex={puzzle?.rating ?? 0}
-            solReward="0.05 SOL"
+            playerColor={boardData?.playerColor ?? null}
             walletSig="4aXz...9P1s"
             walletBalance="12.45 SOL"
           />

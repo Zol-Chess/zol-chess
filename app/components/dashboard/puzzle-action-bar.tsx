@@ -16,7 +16,7 @@ export function PuzzleActionBar({
   puzzleSolved,
 }: PuzzleActionBarProps) {
   return (
-    <div className="flex items-center justify-between glass-panel p-4 neon-border max-w-150 mx-auto w-full">
+    <div className="flex items-center justify-between glass-panel p-4 neon-border max-w-170 mx-auto w-full">
       <div className="flex gap-4">
         <button
           onClick={onHint}

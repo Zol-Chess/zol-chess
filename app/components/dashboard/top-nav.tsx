@@ -13,7 +13,7 @@ import { useCluster } from "../cluster-context";
 
 const WalletConnectionState: Partial<Record<WalletStatus, string>> = {
   connected: "Wallet Connected",
-  disconnected: "Connected Wallet",
+  disconnected: "Connect Wallet",
   connecting: "Connecting Wallet",
   error: "Connection Failed",
 };
@@ -26,6 +26,7 @@ export function TopNav() {
   const { cluster, getExplorerUrl } = useCluster();
   const client = useSolanaClient();
   const status = useAuthStore((state) => state.walletStatus);
+  const user = useAuthStore((state) => state.user);
 
   const address = wallet?.account.address;
   const balance = useBalance(address);
@@ -147,7 +148,7 @@ export function TopNav() {
             </span>
             <span className="font-mono text-chess-muted text-sm">|</span>
             <span className="font-mono text-foreground uppercase text-sm leading-short">
-              Player #7241
+              Player ${user?.player_rating}
             </span>
           </div>
           <button

@@ -38,7 +38,7 @@ export function Sidebar() {
           className="font-bold text-md text-primary uppercase leading-short mb-1"
           style={{ fontFamily: "var(--font-space-grotesk, sans-serif)" }}
         >
-          PLAYER #{user?.player_rating}
+          PLAYER #{user?.player_rating ?? 399}
         </h3>
         <p className="font-mono text-xs text-chess-muted uppercase tracking-widest flex items-center gap-1 leading-short">
           <span className="w-1 h-1 bg-primary rounded-full capitalize" />
