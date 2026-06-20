@@ -2,7 +2,11 @@
 
 import dynamic from "next/dynamic";
 import type { CSSProperties } from "react";
-import type { ChessboardOptions, PieceDropHandlerArgs, SquareHandlerArgs } from "react-chessboard";
+import type {
+  ChessboardOptions,
+  PieceDropHandlerArgs,
+  SquareHandlerArgs,
+} from "react-chessboard";
 
 const Chessboard = dynamic(
   () => import("react-chessboard").then((m) => m.Chessboard),
@@ -82,13 +86,14 @@ export function ChessBoard({
     onSquareClick,
     onPieceDrop,
     squareStyles: perSquareStyles,
-    darkSquareStyle: { backgroundColor: "#312e2b" },
-    lightSquareStyle: { backgroundColor: "#393844" },
+    darkSquareStyle: { backgroundColor: "#1b1b26" },
+    lightSquareStyle: { backgroundColor: "#3e3d48" },
     boardStyle: { borderRadius: "0", border: "none" },
+    alphaNotationStyle: { textTransform: "capitalize" },
   };
 
   return (
-    <div className="glass-panel p-4 neon-border max-w-150 mx-auto w-full relative">
+    <div className="glass-panel p-4 neon-border max-w-170 mx-auto w-full relative">
       <div className="corner-accent corner-tl" />
       <div className="corner-accent corner-tr" />
       <div className="corner-accent corner-bl" />

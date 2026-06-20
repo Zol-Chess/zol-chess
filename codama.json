@@ -1,10 +1,10 @@
 {
-  "idl": "./anchor/target/idl/vault.json",
+  "idl": "./anchor/target/idl/zol_chess_program.json",
   "scripts": {
     "js": [
       {
         "from": "@codama/renderers-js",
-        "args": ["./app/generated/vault"]
+        "args": ["./app/generated/zol_chess_program"]
       }
     ]
   }

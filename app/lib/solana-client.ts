@@ -1,27 +1,27 @@
 import { createEmptyClient } from "@solana/kit";
 import { rpc, rpcAirdrop } from "@solana/kit-plugin-rpc";
 
-export type ClusterMoniker = "devnet" | "testnet" | "mainnet";
+export type ClusterMoniker = "localnet" | "devnet" | "testnet" | "mainnet";
 
 export const CLUSTERS: ClusterMoniker[] = [
+  "localnet",
   "devnet",
   "testnet",
   "mainnet",
-  // "localnet",
 ];
 
 const CLUSTER_URLS: Record<ClusterMoniker, string> = {
+  localnet: "http://localhost:8899",
   devnet: "https://api.devnet.solana.com",
   testnet: "https://api.testnet.solana.com",
   mainnet: "https://api.mainnet-beta.solana.com",
-  // localnet: "http://localhost:8899",
 };
 
 const WS_URLS: Record<ClusterMoniker, string> = {
+  localnet: "ws://localhost:8900",
   devnet: "wss://api.devnet.solana.com",
   testnet: "wss://api.testnet.solana.com",
   mainnet: "wss://api.mainnet-beta.solana.com",
-  // localnet: "ws://localhost:8900",
 };
 
 export function getClusterUrl(cluster: ClusterMoniker) {
@@ -29,7 +29,7 @@ export function getClusterUrl(cluster: ClusterMoniker) {
 }
 
 export function getClusterWsConfig(cluster: ClusterMoniker) {
-  return cluster === "devnet" ? { url: WS_URLS[cluster] } : undefined;
+  return cluster === "mainnet" ? undefined : { url: WS_URLS[cluster] };
 }
 
 export function createSolanaClient(cluster: ClusterMoniker) {

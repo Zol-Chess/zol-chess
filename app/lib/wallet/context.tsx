@@ -21,8 +21,7 @@ import {
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import type { WalletName } from "@solana/wallet-adapter-base";
-import { WalletReadyState } from "@solana/wallet-adapter-base";
-import { clusterApiUrl } from "@solana/web3.js";
+import { clusterApiUrl, VersionedTransaction } from "@solana/web3.js";
 import { useAuthStore } from "@/state/auth";
 import { WALLET_STATUS } from "@/state/auth/auth.types";
 
@@ -51,6 +50,7 @@ function WalletContextBridge({ children }: PropsWithChildren) {
 
   const [error, setError] = useState<unknown>();
   const [showPicker, setShowPicker] = useState(false);
+  // const []
   const isReady = typeof window !== "undefined";
 
   const {
@@ -61,6 +61,7 @@ function WalletContextBridge({ children }: PropsWithChildren) {
     connected,
     connecting,
     wallet: adapterWallet,
+    signTransaction: adapterSignTransaction,
   } = useWallet();
 
   const setWallet = useAuthStore((state) => state.setWalletSession);
@@ -87,6 +88,14 @@ function WalletContextBridge({ children }: PropsWithChildren) {
         disconnect: async () => {
           await disconnect();
         },
+        signTransaction: adapterSignTransaction
+          ? async (wireBytes: Uint8Array) => {
+              const tx = VersionedTransaction.deserialize(wireBytes);
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const signed = await adapterSignTransaction(tx as any);
+              return (signed as VersionedTransaction).serialize();
+            }
+          : undefined,
       };
 
       setWallet({
@@ -103,7 +112,14 @@ function WalletContextBridge({ children }: PropsWithChildren) {
         walletStatus: WALLET_STATUS.DISCONNECTED,
       });
     }
-  }, [connected, publicKey, adapterWallet, disconnect, setWallet]);
+  }, [
+    connected,
+    publicKey,
+    adapterWallet,
+    disconnect,
+    setWallet,
+    adapterSignTransaction,
+  ]);
 
   useEffect(() => {
     if (!didMount.current) {
@@ -151,10 +167,11 @@ function WalletContextBridge({ children }: PropsWithChildren) {
     });
   }, [disconnect, setWallet]);
 
-  const signer = useMemo(
-    () => (session ? createWalletSigner(session, chain) : undefined),
-    [session, chain]
-  );
+  const signer = useMemo(() => {
+    if (!session?.signTransaction && !session?.sendTransaction)
+      return undefined;
+    return createWalletSigner(session, chain);
+  }, [session, chain]);
 
   const value = useMemo<WalletContextValue>(
     () => ({
@@ -188,6 +205,7 @@ export function WalletProvider({ children }: PropsWithChildren) {
   const { cluster } = useCluster();
 
   const endpoint = useMemo(() => {
+    if (cluster === "localnet") return "http://localhost:8899";
     return clusterApiUrl(cluster as any);
   }, [cluster]);
 

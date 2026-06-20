@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from "react";
 
-import { usePuzzles } from "@/hooks/query/use-puzzles";
+import { usePuzzles } from "@/lib/hooks/query/use-puzzles";
 import { decryptSolution } from "@/script/encrypt-solution";
 import { Puzzle } from "@/services/puzzle.ts/puzzle.types";
 
 import MainPlay from "./main-play";
+import { useWalletValues } from "@/lib/wallet/context";
 
 const PuzzlesWrapper = () => {
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const { data: puzzles, isLoading } = usePuzzles();
+  const { signer } = useWalletValues();
 
   useEffect(() => {
     if (!puzzles?.length) return;
@@ -25,7 +27,7 @@ const PuzzlesWrapper = () => {
     );
   }, [puzzles]);
 
-  return <MainPlay puzzle={puzzle} isLoading={isLoading} />;
+  return <MainPlay signer={signer} puzzle={puzzle} isLoading={isLoading} />;
 };
 
 export default PuzzlesWrapper;

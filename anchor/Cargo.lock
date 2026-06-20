@@ -650,6 +650,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "brine-ed25519"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "be728c3403d1c0f20ecf0dc5f0dbb96d4f10e2c92d2f6064804de3bbc9cc107d"
+dependencies = [
+ "curve25519-dalek 4.1.3",
+ "sha2 0.10.9",
+ "solana-define-syscall",
+]
+
+[[package]]
 name = "brotli"
 version = "8.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5192,15 +5203,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6c140620e7ffbb22c2dee59cafe6084a59b5ffc27a8859a5f0d494b5d52b6be"
 
 [[package]]
-name = "vault"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
- "litesvm",
- "solana-sdk",
-]
-
-[[package]]
 name = "vcpkg"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5671,3 +5673,13 @@ name = "zmij"
 version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2fc5a66a20078bf1251bde995aa2fdcc4b800c70b5d92dd2c62abc5c60f679f8"
+
+[[package]]
+name = "zol-chess"
+version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+ "brine-ed25519",
+ "litesvm",
+ "solana-sdk",
+]

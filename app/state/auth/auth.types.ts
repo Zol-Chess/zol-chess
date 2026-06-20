@@ -11,7 +11,8 @@ export interface AuthState extends UserWalletSession {
   user?: User;
   error?: string;
   loading?: boolean;
-  // getUser: () => Promise<void>;
+  setUser: (user: User) => void;
+  updateUser: (user: User) => void;
   setWalletSession: (details: UserWalletSession) => void;
 }
 
@@ -22,7 +23,6 @@ export interface User {
   puzzle_rating?: number;
   highest_rating?: number;
   global_rank?: number;
-  level: number;
   next_difficulty?: number;
   puzzles_solved?: number;
   puzzles_attempted?: number;
@@ -39,7 +39,6 @@ export interface User {
   //   referral_code?: string
   //   referred_by?: string | null
 
-  // Activity
   last_seen?: string | null;
 }
 

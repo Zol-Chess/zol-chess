@@ -1,15 +1,15 @@
 // Web Crypto API — works in Node 18+ and all modern browsers
+import { ed25519 } from "@noble/curves/ed25519.js";
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 
 function hexToBytes(hex: string): Uint8Array<ArrayBuffer> {
-  const buf = new ArrayBuffer(hex.length / 2);
-  const bytes = new Uint8Array(buf);
-  for (let i = 0; i < bytes.length; i++) {
-    bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  const out = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < out.length; i++) {
+    out[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
   }
-  return bytes;
+  return out as Uint8Array<ArrayBuffer>;
 }
 
 function bytesToHex(bytes: Uint8Array): string {
@@ -18,14 +18,18 @@ function bytesToHex(bytes: Uint8Array): string {
     .join("");
 }
 
-// Derives a per-puzzle AES-GCM-256 key from PUZZLE_SECRET + puzzleId via HKDF.
+// TextEncoder.encode() always returns ArrayBuffer-backed memory — cast is safe.
+function toBuffer(str: string): Uint8Array<ArrayBuffer> {
+  return enc.encode(str) as Uint8Array<ArrayBuffer>;
+}
+
 async function deriveAesKey(
   secret: string,
   puzzleId: string
 ): Promise<{ key: CryptoKey; keyHex: string }> {
   const base = await crypto.subtle.importKey(
     "raw",
-    new Uint8Array(enc.encode(secret)),
+    toBuffer(secret),
     "HKDF",
     false,
     ["deriveKey"]
@@ -35,8 +39,8 @@ async function deriveAesKey(
     {
       name: "HKDF",
       hash: "SHA-256",
-      salt: new Uint8Array(enc.encode(puzzleId)),
-      info: new Uint8Array(enc.encode("puzzle-solution")),
+      salt: toBuffer(puzzleId),
+      info: toBuffer("puzzle-solution"),
     },
     base,
     { name: "AES-GCM", length: 256 },
@@ -58,18 +62,44 @@ async function importAesKey(keyHex: string): Promise<CryptoKey> {
   );
 }
 
-async function getHmacKey(secret: string): Promise<CryptoKey> {
-  return crypto.subtle.importKey(
-    "raw",
-    new Uint8Array(enc.encode(secret)),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign", "verify"]
-  );
+async function deriveSigningKey(secret: string): Promise<Uint8Array> {
+  const digest = await crypto.subtle.digest("SHA-256", toBuffer(secret));
+  return new Uint8Array(digest);
 }
 
-// Server-only: encrypts moves JSON and returns the ciphertext + per-puzzle derived key.
-// AES-GCM output embeds the auth tag — no separate tag field needed.
+const BASE58_ALPHABET =
+  "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+
+// Decodes a base58-encoded Solana address to its raw 32 bytes.
+function decodeBase58Pubkey(str: string): Uint8Array {
+  const result = new Uint8Array(32);
+  for (const char of str) {
+    let carry = BASE58_ALPHABET.indexOf(char);
+    if (carry < 0) throw new Error(`Invalid base58 character: ${char}`);
+    for (let i = 31; i >= 0; i--) {
+      carry += 58 * result[i];
+      result[i] = carry & 0xff;
+      carry >>= 8;
+    }
+  }
+  return result;
+}
+
+// message = puzzleId_utf8 | ':' | playerPubkey_raw_32_bytes
+// Raw bytes avoid BPF base58 encoding on the Rust side (~1M CUs via Pubkey::fmt).
+function buildSigningMessage(
+  puzzleId: string,
+  playerPubkey: string
+): Uint8Array<ArrayBuffer> {
+  const idBytes = toBuffer(puzzleId);
+  const pubkeyBytes = playerPubkey ? decodeBase58Pubkey(playerPubkey) : new Uint8Array(32);
+  const msg = new Uint8Array(idBytes.length + 1 + 32) as Uint8Array<ArrayBuffer>;
+  msg.set(idBytes, 0);
+  msg[idBytes.length] = 58; // ':'
+  msg.set(pubkeyBytes, idBytes.length + 1);
+  return msg;
+}
+
 export async function encryptSolution(
   movesJson: string,
   puzzleId: string
@@ -83,7 +113,7 @@ export async function encryptSolution(
   const ciphertext = await crypto.subtle.encrypt(
     { name: "AES-GCM", iv },
     key,
-    new Uint8Array(enc.encode(movesJson))
+    toBuffer(movesJson)
   );
 
   return {
@@ -93,8 +123,6 @@ export async function encryptSolution(
   };
 }
 
-// Client-side: decrypts using the keyHex sent by the server.
-// No PUZZLE_SECRET needed — safe to call in the browser.
 export async function decryptSolution(
   encrypted: { iv: string; data: string },
   keyHex: string
@@ -112,38 +140,26 @@ export async function decryptSolution(
   }
 }
 
-// Server-only: HMAC-SHA256 over "puzzleId:movesJson".
-// The client stores this token and sends it back on submission for verification.
 export async function signSolution(
-  movesJson: string,
-  puzzleId: string
+  puzzleId: string,
+  playerPubkey: string
 ): Promise<string | null> {
   const secret = process.env.PUZZLE_SECRET;
   if (!secret) return null;
 
-  const hmacKey = await getHmacKey(secret);
-  const sig = await crypto.subtle.sign(
-    "HMAC",
-    hmacKey,
-    new Uint8Array(enc.encode(`${puzzleId}:${movesJson}`))
-  );
-  return bytesToHex(new Uint8Array(sig));
+  const privateKey = await deriveSigningKey(secret);
+  const message = buildSigningMessage(puzzleId, playerPubkey);
+  const signature = ed25519.sign(message, privateKey);
+  return bytesToHex(signature);
 }
 
-// Server-only: re-derives HMAC and performs a constant-time comparison.
-export async function verifySolution(
-  movesJson: string,
-  puzzleId: string,
-  signature: string
-): Promise<boolean> {
+// Prints the Ed25519 public key derived from PUZZLE_SECRET.
+// Copy the output into PUZZLE_PUBLIC_KEY in constants.rs.
+export async function generatePublicKey(): Promise<void> {
   const secret = process.env.PUZZLE_SECRET;
-  if (!secret) return false;
+  if (!secret) return;
 
-  const hmacKey = await getHmacKey(secret);
-  return crypto.subtle.verify(
-    "HMAC",
-    hmacKey,
-    hexToBytes(signature),
-    new Uint8Array(enc.encode(`${puzzleId}:${movesJson}`))
-  );
+  const privateKey = await deriveSigningKey(secret);
+  const publicKey = ed25519.getPublicKey(privateKey);
+  console.log(bytesToHex(publicKey));
 }

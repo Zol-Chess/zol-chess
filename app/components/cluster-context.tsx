@@ -26,7 +26,7 @@ function getInitialCluster(): ClusterMoniker {
   if (stored && CLUSTERS.includes(stored as ClusterMoniker)) {
     return stored as ClusterMoniker;
   }
-  return "devnet";
+  return "localnet";
 }
 
 export { CLUSTERS };

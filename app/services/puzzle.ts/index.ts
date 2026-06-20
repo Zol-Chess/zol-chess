@@ -4,11 +4,12 @@ import { PuzzleResponse } from "./puzzle.types";
 
 export const getRandomPuzzles = async (
   rating: number,
-  count = 10
+  count = 10,
+  playerPubkey = ""
 ): Promise<PuzzleResponse[]> => {
   try {
     const { data } = await API.get<{ puzzles: PuzzleResponse[] }>("puzzles", {
-      params: { rating, count },
+      params: { rating, count, player: playerPubkey },
     });
 
     return data.puzzles;
@@ -18,9 +19,14 @@ export const getRandomPuzzles = async (
 };
 
 // Fallback fetch for direct URL navigation when puzzleStore is empty
-export const getPuzzleById = async (id: string): Promise<PuzzleResponse> => {
+export const getPuzzleById = async (
+  id: string,
+  playerPubkey = ""
+): Promise<PuzzleResponse> => {
   try {
-    const { data } = await API.get<PuzzleResponse>(`puzzles/${id}`);
+    const { data } = await API.get<PuzzleResponse>(`puzzles/${id}`, {
+      params: { player: playerPubkey },
+    });
     console.log({ data });
 
     return data;
