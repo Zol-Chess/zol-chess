@@ -30,6 +30,7 @@ import { createWalletSigner } from "./signer";
 import { useCluster } from "../../components/cluster-context";
 import { showToast } from "../toast";
 import WalletPicker, { AllowedWallet } from "@/components/wallet-picker";
+import { sign } from "crypto";
 
 export type WalletStatus = (typeof WALLET_STATUS)[keyof typeof WALLET_STATUS];
 
@@ -68,6 +69,8 @@ function WalletContextBridge({ children }: PropsWithChildren) {
   const session = useAuthStore((state) => state.walletSession);
   const wasConnected = useRef(false);
   const didMount = useRef(false);
+
+  console.log(publicKey);
 
   // Sync session from the adapter whenever the connection state changes.
   useEffect(() => {

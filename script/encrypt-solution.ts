@@ -1,22 +1,8 @@
 // Web Crypto API — works in Node 18+ and all modern browsers
 import { ed25519 } from "@noble/curves/ed25519.js";
+import { bytesToHex } from "./helpers";
 
 const enc = new TextEncoder();
-const dec = new TextDecoder();
-
-function hexToBytes(hex: string): Uint8Array<ArrayBuffer> {
-  const out = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < out.length; i++) {
-    out[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
-  }
-  return out as Uint8Array<ArrayBuffer>;
-}
-
-function bytesToHex(bytes: Uint8Array): string {
-  return Array.from(bytes)
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
 
 // TextEncoder.encode() always returns ArrayBuffer-backed memory — cast is safe.
 function toBuffer(str: string): Uint8Array<ArrayBuffer> {
@@ -52,16 +38,6 @@ async function deriveAesKey(
   return { key, keyHex: bytesToHex(new Uint8Array(raw)) };
 }
 
-async function importAesKey(keyHex: string): Promise<CryptoKey> {
-  return crypto.subtle.importKey(
-    "raw",
-    hexToBytes(keyHex),
-    { name: "AES-GCM" },
-    false,
-    ["decrypt"]
-  );
-}
-
 async function deriveSigningKey(secret: string): Promise<Uint8Array> {
   const digest = await crypto.subtle.digest("SHA-256", toBuffer(secret));
   return new Uint8Array(digest);
@@ -92,8 +68,12 @@ function buildSigningMessage(
   playerPubkey: string
 ): Uint8Array<ArrayBuffer> {
   const idBytes = toBuffer(puzzleId);
-  const pubkeyBytes = playerPubkey ? decodeBase58Pubkey(playerPubkey) : new Uint8Array(32);
-  const msg = new Uint8Array(idBytes.length + 1 + 32) as Uint8Array<ArrayBuffer>;
+  const pubkeyBytes = playerPubkey
+    ? decodeBase58Pubkey(playerPubkey)
+    : new Uint8Array(32);
+  const msg = new Uint8Array(
+    idBytes.length + 1 + 32
+  ) as Uint8Array<ArrayBuffer>;
   msg.set(idBytes, 0);
   msg[idBytes.length] = 58; // ':'
   msg.set(pubkeyBytes, idBytes.length + 1);
@@ -121,23 +101,6 @@ export async function encryptSolution(
     data: bytesToHex(new Uint8Array(ciphertext)),
     keyHex,
   };
-}
-
-export async function decryptSolution(
-  encrypted: { iv: string; data: string },
-  keyHex: string
-): Promise<string[] | null> {
-  try {
-    const key = await importAesKey(keyHex);
-    const plain = await crypto.subtle.decrypt(
-      { name: "AES-GCM", iv: hexToBytes(encrypted.iv) },
-      key,
-      hexToBytes(encrypted.data)
-    );
-    return JSON.parse(dec.decode(plain)) as string[];
-  } catch {
-    return null;
-  }
 }
 
 export async function signSolution(

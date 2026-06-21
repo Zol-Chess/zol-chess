@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 
 import { usePuzzles } from "@/lib/hooks/query/use-puzzles";
-import { decryptSolution } from "@/script/encrypt-solution";
 import { Puzzle } from "@/services/puzzle.ts/puzzle.types";
+import { useWalletValues } from "@/lib/wallet/context";
+import { decryptSolution } from "@/script/decrypt-solution";
 
 import MainPlay from "./main-play";
-import { useWalletValues } from "@/lib/wallet/context";
 
 const PuzzlesWrapper = () => {
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);

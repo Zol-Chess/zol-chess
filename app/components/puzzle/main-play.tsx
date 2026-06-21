@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { useRouter } from "next/navigation";
+import { useSWRConfig } from "swr";
 
 import { Puzzle } from "@/services/puzzle.ts/puzzle.types";
 import { getRandomPuzzles } from "@/services/puzzle.ts";
@@ -37,6 +38,7 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
   const setPuzzles = usePuzzleStore((s) => s.updatePuzzleList);
   const user = useAuthStore((s) => s.user);
   const { send } = useSendTransaction();
+  const { mutate } = useSWRConfig();
   const startTimeRef = useRef<number>(Date.now());
 
   const [moveLog, setMoveLog] = useState<MoveEntry[]>([]);
@@ -229,6 +231,7 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
       });
 
       await send({ instructions: [ix] });
+      mutate((key: unknown) => Array.isArray(key) && key[0] === "chain-profile");
 
       showToast("Solution submitted! Loading next puzzle...", "success");
       setTimeout(() => goToNextPuzzle(), 1500);

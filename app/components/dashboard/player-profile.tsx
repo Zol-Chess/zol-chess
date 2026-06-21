@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuthStore } from "@/state/auth";
-import { usePlayerProfile } from "@/lib/hooks/use-player-profile";
 
 import { GlassPanel } from "./glass-panel";
 import { SectionHeader } from "./section-header";
@@ -10,10 +9,7 @@ const PROFILE_IMG =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuAaK5NsNyA8cPvbHFL-KkSEIH9Qpm4OaCx09AzzBKtgqupbojAeJl88_vewYpvd92YE7th9y_FjrX2Ek40hJolZRDEXkgFB4_NsIH_xcLOXgQhkrVXrHvB8FVkbBk8sxiJQM9CBh-gB8Hkg1ssDVBLwBQNzSBvTWwh6wRnYJ_dMJ_hprx01rN4t3WoJ66BMXdFPttwurgWw8fJT4PJiK2tWQfpQdgtbk5wRKs-ZdTIdV9Yd16ewebvcndMnNkwDVrkyeWL8d3u-oYU";
 
 function PlayerProfile() {
-  const { isLoading, isInitializing } = usePlayerProfile();
   const user = useAuthStore((state) => state.user);
-
-  if (isLoading || isInitializing) return;
 
   return (
     <GlassPanel className="p-6 flex flex-col">
@@ -27,14 +23,14 @@ function PlayerProfile() {
           />
           <div className="absolute inset-0 border border-primary/30 animate-pulse" />
         </div>
-        <h3
+        {/* <h3
           className="text-h6 font-bold text-primary uppercase mb-1 leading-short"
           style={{
             fontFamily: "var(--font-space-grotesk, sans-serif)",
           }}
         >
           Puzzle Rating: #{user?.puzzle_rating ?? "---"}
-        </h3>
+        </h3> */}
         {user?.achievements?.length && (
           <p className="font-mono text-xs text-chess-muted uppercase tracking-widest mb-6 leading-short">
             Achievements
