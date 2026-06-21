@@ -5,7 +5,10 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-zol_chess = "4DbgpcAxF7u3Uf2T2obBLZXuHZCECnG3mEjrgxxqFr5K"
+zol_chess = "8rma9vAqsVAz6pAWFCqnaGTktkzpVk1TWFQsgH3VEh6Y"
+
+[registry]
+url = "https://api.apr.dev"
 
 [provider]
 cluster = "localnet"
@@ -13,5 +16,3 @@ wallet = "~/.config/solana/id.json"
 
 [scripts]
 test = "cargo test"
-
-[hooks]

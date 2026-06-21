@@ -7,6 +7,8 @@
  */
 
 import {
+  addDecoderSizePrefix,
+  addEncoderSizePrefix,
   combineCodec,
   fixDecoderSize,
   fixEncoderSize,
@@ -14,13 +16,17 @@ import {
   getBytesEncoder,
   getStructDecoder,
   getStructEncoder,
+  getU32Decoder,
+  getU32Encoder,
+  getUtf8Decoder,
+  getUtf8Encoder,
   transformEncoder,
   type AccountMeta,
   type AccountSignerMeta,
   type Address,
-  type FixedSizeCodec,
-  type FixedSizeDecoder,
-  type FixedSizeEncoder,
+  type Codec,
+  type Decoder,
+  type Encoder,
   type Instruction,
   type InstructionWithAccounts,
   type InstructionWithData,
@@ -55,7 +61,7 @@ export type InitializeRewardMintInstruction<
   TAccountRewardAuthority extends string | AccountMeta<string> = string,
   TAccountRewardMint extends string | AccountMeta<string> = string,
   TAccountTokenProgram extends string | AccountMeta<string> =
-    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
   TAccountSystemProgram extends string | AccountMeta<string> =
     "11111111111111111111111111111111",
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
@@ -88,13 +94,17 @@ export type InitializeRewardMintInstruction<
 
 export type InitializeRewardMintInstructionData = {
   discriminator: ReadonlyUint8Array;
+  uri: string;
 };
 
-export type InitializeRewardMintInstructionDataArgs = {};
+export type InitializeRewardMintInstructionDataArgs = { uri: string };
 
-export function getInitializeRewardMintInstructionDataEncoder(): FixedSizeEncoder<InitializeRewardMintInstructionDataArgs> {
+export function getInitializeRewardMintInstructionDataEncoder(): Encoder<InitializeRewardMintInstructionDataArgs> {
   return transformEncoder(
-    getStructEncoder([["discriminator", fixEncoderSize(getBytesEncoder(), 8)]]),
+    getStructEncoder([
+      ["discriminator", fixEncoderSize(getBytesEncoder(), 8)],
+      ["uri", addEncoderSizePrefix(getUtf8Encoder(), getU32Encoder())],
+    ]),
     (value) => ({
       ...value,
       discriminator: INITIALIZE_REWARD_MINT_DISCRIMINATOR,
@@ -102,13 +112,14 @@ export function getInitializeRewardMintInstructionDataEncoder(): FixedSizeEncode
   );
 }
 
-export function getInitializeRewardMintInstructionDataDecoder(): FixedSizeDecoder<InitializeRewardMintInstructionData> {
+export function getInitializeRewardMintInstructionDataDecoder(): Decoder<InitializeRewardMintInstructionData> {
   return getStructDecoder([
     ["discriminator", fixDecoderSize(getBytesDecoder(), 8)],
+    ["uri", addDecoderSizePrefix(getUtf8Decoder(), getU32Decoder())],
   ]);
 }
 
-export function getInitializeRewardMintInstructionDataCodec(): FixedSizeCodec<
+export function getInitializeRewardMintInstructionDataCodec(): Codec<
   InitializeRewardMintInstructionDataArgs,
   InitializeRewardMintInstructionData
 > {
@@ -132,6 +143,7 @@ export type InitializeRewardMintAsyncInput<
   rewardMint?: Address<TAccountRewardMint>;
   tokenProgram?: Address<TAccountTokenProgram>;
   systemProgram?: Address<TAccountSystemProgram>;
+  uri: InitializeRewardMintInstructionDataArgs["uri"];
 };
 
 export async function getInitializeRewardMintInstructionAsync<
@@ -184,6 +196,9 @@ export async function getInitializeRewardMintInstructionAsync<
     ResolvedAccount
   >;
 
+  // Original args.
+  const args = { ...input };
+
   // Resolve default values.
   if (!accounts.rewardConfig.value) {
     accounts.rewardConfig.value = await findRewardConfigPda();
@@ -196,7 +211,7 @@ export async function getInitializeRewardMintInstructionAsync<
   }
   if (!accounts.tokenProgram.value) {
     accounts.tokenProgram.value =
-      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" as Address<"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA">;
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address<"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb">;
   }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
@@ -213,7 +228,9 @@ export async function getInitializeRewardMintInstructionAsync<
       getAccountMeta(accounts.tokenProgram),
       getAccountMeta(accounts.systemProgram),
     ],
-    data: getInitializeRewardMintInstructionDataEncoder().encode({}),
+    data: getInitializeRewardMintInstructionDataEncoder().encode(
+      args as InitializeRewardMintInstructionDataArgs,
+    ),
     programAddress,
   } as InitializeRewardMintInstruction<
     TProgramAddress,
@@ -240,6 +257,7 @@ export type InitializeRewardMintInput<
   rewardMint: Address<TAccountRewardMint>;
   tokenProgram?: Address<TAccountTokenProgram>;
   systemProgram?: Address<TAccountSystemProgram>;
+  uri: InitializeRewardMintInstructionDataArgs["uri"];
 };
 
 export function getInitializeRewardMintInstruction<
@@ -290,10 +308,13 @@ export function getInitializeRewardMintInstruction<
     ResolvedAccount
   >;
 
+  // Original args.
+  const args = { ...input };
+
   // Resolve default values.
   if (!accounts.tokenProgram.value) {
     accounts.tokenProgram.value =
-      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" as Address<"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA">;
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address<"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb">;
   }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
@@ -310,7 +331,9 @@ export function getInitializeRewardMintInstruction<
       getAccountMeta(accounts.tokenProgram),
       getAccountMeta(accounts.systemProgram),
     ],
-    data: getInitializeRewardMintInstructionDataEncoder().encode({}),
+    data: getInitializeRewardMintInstructionDataEncoder().encode(
+      args as InitializeRewardMintInstructionDataArgs,
+    ),
     programAddress,
   } as InitializeRewardMintInstruction<
     TProgramAddress,

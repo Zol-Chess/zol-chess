@@ -36,7 +36,7 @@ import {
 } from "../instructions";
 
 export const ZOL_CHESS_PROGRAM_PROGRAM_ADDRESS =
-  "4DbgpcAxF7u3Uf2T2obBLZXuHZCECnG3mEjrgxxqFr5K" as Address<"4DbgpcAxF7u3Uf2T2obBLZXuHZCECnG3mEjrgxxqFr5K">;
+  "8rma9vAqsVAz6pAWFCqnaGTktkzpVk1TWFQsgH3VEh6Y" as Address<"8rma9vAqsVAz6pAWFCqnaGTktkzpVk1TWFQsgH3VEh6Y">;
 
 export enum ZolChessProgramAccount {
   AchievementReward,
@@ -219,7 +219,7 @@ export function identifyZolChessProgramInstruction(
 }
 
 export type ParsedZolChessProgramInstruction<
-  TProgram extends string = "4DbgpcAxF7u3Uf2T2obBLZXuHZCECnG3mEjrgxxqFr5K",
+  TProgram extends string = "8rma9vAqsVAz6pAWFCqnaGTktkzpVk1TWFQsgH3VEh6Y",
 > =
   | ({
       instructionType: ZolChessProgramInstruction.ClaimAchievement;

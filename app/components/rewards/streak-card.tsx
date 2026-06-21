@@ -1,7 +1,18 @@
-import { streakSummary } from "./models";
+type StreakCardProps = {
+  currentStreak: number;
+  longestStreak: number;
+  solved: number;
+};
 
-export function StreakCard() {
-  const segments = Array.from({ length: streakSummary.totalSegments }, (_, i) => i);
+export function StreakCard({
+  currentStreak,
+  longestStreak,
+  solved,
+}: StreakCardProps) {
+  const totalSegments = 7;
+  const activeSegments = Math.min(currentStreak, totalSegments);
+  const progressPercent = Math.round((activeSegments / totalSegments) * 100);
+  const segments = Array.from({ length: totalSegments }, (_, i) => i);
 
   return (
     <div className="lg:col-span-4 glass-panel p-8 flex flex-col justify-between border border-primary/30 shadow-[0_0_15px_rgba(20,241,149,0.1),inset_0_0_10px_rgba(20,241,149,0.05)]">
@@ -15,24 +26,26 @@ export function StreakCard() {
           </span>
         </div>
         <h2 className="text-[clamp(2.25rem,5vw,3.5rem)] font-display font-bold text-foreground leading-none">
-          {streakSummary.days} DAYS
+          {currentStreak} WINS
         </h2>
         <p className="text-chess-muted font-mono text-xs mt-4 uppercase tracking-normal leading-long">
-          {streakSummary.requirement}
+          LONGEST: {longestStreak}
+          {" // "}
+          PUZZLES_SOLVED: {solved}
         </p>
       </div>
 
       <div className="mt-8">
         <div className="flex justify-between text-[10px] text-primary mb-2 uppercase font-mono">
           <span>Stability: Optimal</span>
-          <span>{streakSummary.progressPercent}%</span>
+          <span>{progressPercent}%</span>
         </div>
         <div className="grid grid-cols-7 gap-1.5 h-3">
           {segments.map((segment) => (
             <div
               key={segment}
               className={
-                segment < streakSummary.activeSegments
+                segment < activeSegments
                   ? "bg-primary shadow-[0_0_8px_rgba(20,241,149,0.3)]"
                   : "bg-primary/15 border border-primary/25"
               }

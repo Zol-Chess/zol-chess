@@ -1,4 +1,4 @@
-export function BoostMultiplier() {
+export function BoostMultiplier({ nftCount }: { nftCount: number }) {
   return (
     <div className="glass-panel p-6 border-primary/30">
       <div className="flex items-center gap-4">
@@ -12,7 +12,9 @@ export function BoostMultiplier() {
             Boost_Multiplier
           </h4>
           <p className="text-[11px] font-mono text-chess-muted leading-short mt-1">
-            HOLD_NFT: 2.0X SCALE ACTIVE
+            ACHIEVEMENT_ASSETS: {nftCount}
+            {" // "}
+            NO TOKEN MULTIPLIER
           </p>
         </div>
       </div>
