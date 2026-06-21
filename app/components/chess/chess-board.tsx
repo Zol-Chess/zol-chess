@@ -21,8 +21,10 @@ const Chessboard = dynamic(
 type ChessBoardProps = {
   chessPosition: string;
   lastMove?: { from: string; to: string };
+  boardOrientation?: "white" | "black";
   arePiecesDraggable?: boolean;
   selected?: string | null;
+  optionSquares?: Record<string, CSSProperties>;
   incorrectSquare?: string | null;
   wrongMoveActive?: boolean;
   hintSquare?: string | null;
@@ -34,8 +36,10 @@ type ChessBoardProps = {
 export function ChessBoard({
   chessPosition,
   lastMove,
+  boardOrientation = "white",
   arePiecesDraggable = true,
   selected,
+  optionSquares = {},
   incorrectSquare,
   wrongMoveActive,
   hintSquare,
@@ -43,7 +47,9 @@ export function ChessBoard({
   onPieceDrop,
   onSquareClick,
 }: ChessBoardProps) {
-  const perSquareStyles: Record<string, CSSProperties> = {};
+  const perSquareStyles: Record<string, CSSProperties> = {
+    ...optionSquares,
+  };
 
   if (selected) {
     perSquareStyles[selected] = {
@@ -82,6 +88,7 @@ export function ChessBoard({
 
   const boardOptions: ChessboardOptions = {
     position: chessPosition,
+    boardOrientation,
     allowDragging: arePiecesDraggable,
     onSquareClick,
     onPieceDrop,
@@ -93,7 +100,7 @@ export function ChessBoard({
   };
 
   return (
-    <div className="glass-panel p-4 neon-border max-w-170 mx-auto w-full relative">
+    <div className="glass-panel p-4 neon-border w-full lg:max-w-[calc(100vh-15rem)] lg:mx-auto relative">
       <div className="corner-accent corner-tl" />
       <div className="corner-accent corner-tr" />
       <div className="corner-accent corner-bl" />

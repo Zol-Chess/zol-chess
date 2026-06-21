@@ -25,9 +25,9 @@ export function EngineLog({ moves, onViewHistory }: EngineLogProps) {
 
       {/* Move list */}
       <div className="p-6 flex-1 min-h-0 font-mono text-xs space-y-2 overflow-y-auto max-h-72 custom-scrollbar text-chess-muted/70">
-        {moves.map((move) => (
+        {moves.map((move, index) => (
           <div
-            key={move.number}
+            key={`${move.number}-${move.white}-${index}`}
             className={`flex gap-4 ${
               move.active ? "bg-primary/10 py-1 -mx-2 px-2 text-foreground" : ""
             }`}

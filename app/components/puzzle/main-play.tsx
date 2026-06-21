@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { Chess } from "chess.js";
 import { useRouter } from "next/navigation";
 import { useSWRConfig } from "swr";
@@ -8,7 +8,10 @@ import { useSWRConfig } from "swr";
 import { Puzzle } from "@/services/puzzle.ts/puzzle.types";
 import { getRandomPuzzles } from "@/services/puzzle.ts";
 import { showToast } from "@/lib/toast";
-import { useChessMoves } from "@/lib/hooks/use-chess-moves";
+import {
+  useChessMoves,
+  type PlayedMove,
+} from "@/lib/hooks/use-chess-moves";
 import { catchErr } from "@/utils/error-handlers";
 import { usePuzzleStore } from "@/state/puzzle";
 import { useAuthStore } from "@/state/auth";
@@ -26,6 +29,37 @@ function uciToLabel(uci: string): string {
   return `${uci.slice(0, 2).toUpperCase()}→${uci.slice(2, 4).toUpperCase()}`;
 }
 
+function appendPlayedMove(
+  entries: MoveEntry[],
+  playedMove: PlayedMove,
+): MoveEntry[] {
+  const nextEntries = entries.map((entry) => ({ ...entry, active: false }));
+  const entryIndex = nextEntries.findIndex(
+    (entry) =>
+      entry.number === playedMove.moveNumber && !entry.white.startsWith("["),
+  );
+  const label = playedMove.san;
+
+  if (entryIndex >= 0) {
+    const entry = nextEntries[entryIndex]!;
+    nextEntries[entryIndex] = {
+      ...entry,
+      white: playedMove.color === "w" ? label : entry.white,
+      black: playedMove.color === "b" ? label : entry.black,
+      active: true,
+    };
+    return nextEntries;
+  }
+
+  nextEntries.push({
+    number: playedMove.moveNumber,
+    white: playedMove.color === "w" ? label : "_",
+    black: playedMove.color === "b" ? label : undefined,
+    active: true,
+  });
+  return nextEntries;
+}
+
 interface MainPlayProps {
   signer?: TransactionSigner;
   puzzle: Puzzle | null;
@@ -39,13 +73,6 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
   const user = useAuthStore((s) => s.user);
   const { send } = useSendTransaction();
   const { mutate } = useSWRConfig();
-  const startTimeRef = useRef<number>(Date.now());
-
-  const [moveLog, setMoveLog] = useState<MoveEntry[]>([]);
-  const [incorrectCount, setIncorrectCount] = useState(0);
-  const [puzzleSolved, setPuzzleSolved] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
   const boardData = useMemo(() => {
     if (!puzzle?.moves?.length) return null;
@@ -55,8 +82,9 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
     const to = triggerUci.slice(2, 4);
     const chess = new Chess(puzzle.fen);
 
+    let triggerMove;
     try {
-      chess.move({ from, to, promotion: "q" });
+      triggerMove = chess.move({ from, to, promotion: "q" });
     } catch {
       return null;
     }
@@ -78,38 +106,58 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
       objective: `${theme} IN ${movesToWin} // ${playerColor} TO MOVE`,
       threatLevel: difficultyLabel(puzzle.rating),
       initialLog: [
-        { number: 1, white: uciToLabel(triggerUci), active: true },
+        {
+          number: Number(triggerMove.before.split(" ")[5]),
+          white: triggerMove.color === "w" ? triggerMove.san : "_",
+          black: triggerMove.color === "b" ? triggerMove.san : undefined,
+          active: true,
+        },
       ] as MoveEntry[],
     };
   }, [puzzle]);
 
+  const initialMoveLog = useMemo(
+    () => boardData?.initialLog ?? [],
+    [boardData]
+  );
+  const [startedAt] = useState(() => Date.now());
+  const [moveLog, setMoveLog] = useState<MoveEntry[]>(initialMoveLog);
+  const [puzzleSolved, setPuzzleSolved] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
   function handleIncorrectMove(move: string) {
-    const attempt = incorrectCount + 1;
-    setIncorrectCount(attempt);
-    setMoveLog((prev) => [
-      ...prev,
-      {
-        number: prev.length + 1,
-        white: `[X] ${uciToLabel(move)}`,
-        black: `attempt_${attempt}`,
-        active: true,
-      },
-    ]);
+    setMoveLog((prev) => {
+      const attempt =
+        prev.filter((entry) => entry.white.startsWith("[X]")).length + 1;
+      return [
+        ...prev,
+        {
+          number: prev.length + 1,
+          white: `[X] ${uciToLabel(move)}`,
+          black: `attempt_${attempt}`,
+          active: true,
+        },
+      ];
+    });
   }
 
   function handlePuzzleSolved() {
     setPuzzleSolved(true);
-    setMoveLog((prev) => [
-      ...prev,
-      { number: prev.length + 1, white: "SOLVED ✓", active: true },
-    ]);
+  }
+
+  function handleMovePlayed(move: PlayedMove) {
+    setMoveLog((prev) => appendPlayedMove(prev, move));
   }
 
   const {
     selected,
     chessPosition,
+    lastMove,
+    optionSquares,
     incorrectSquare,
     wrongMoveActive,
+    opponentMovePending,
     hintSquare,
     getHint,
     resetPuzzle,
@@ -120,18 +168,10 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
     boardData?.fen ?? "",
     boardData?.solutionMoves ?? [],
     handleIncorrectMove,
-    handlePuzzleSolved
+    handlePuzzleSolved,
+    handleMovePlayed,
+    boardData?.lastMove
   );
-
-  // Reset game state whenever a new puzzle loads
-  useEffect(() => {
-    if (!boardData) return;
-    setMoveLog(boardData.initialLog);
-    setIncorrectCount(0);
-    setPuzzleSolved(false);
-    setShowHistory(false);
-    startTimeRef.current = Date.now();
-  }, [boardData]);
 
   function handleGetHint() {
     const fromSquare = getHint();
@@ -154,10 +194,7 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
 
   function handleReset() {
     resetPuzzle();
-    if (boardData) {
-      setMoveLog(boardData.initialLog);
-    }
-    setIncorrectCount(0);
+    setMoveLog(initialMoveLog);
     setPuzzleSolved(false);
   }
 
@@ -212,7 +249,10 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
     try {
       setSubmitting(true);
 
-      const timeTaken = Math.floor((Date.now() - startTimeRef.current) / 1000);
+      const timeTaken = Math.floor((Date.now() - startedAt) / 1000);
+      const incorrectCount = moveLog.filter((entry) =>
+        entry.white.startsWith("[X]")
+      ).length;
 
       if (!puzzle.solutionSignature) return;
 
@@ -287,9 +327,9 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
               </button>
             </div>
             <div className="overflow-y-auto custom-scrollbar space-y-2 font-mono text-xs text-chess-muted/70 flex-1">
-              {moveLog.map((move) => (
+              {moveLog.map((move, index) => (
                 <div
-                  key={move.number}
+                  key={`${move.number}-${move.white}-${index}`}
                   className={`flex gap-4 ${move.active ? "text-foreground" : ""}`}
                 >
                   <span
@@ -316,9 +356,13 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
           {boardData?.fen && (
             <ChessBoard
               chessPosition={chessPosition}
-              lastMove={boardData.lastMove}
-              arePiecesDraggable
+              lastMove={lastMove}
+              boardOrientation={
+                boardData.playerColor === "BLACK" ? "black" : "white"
+              }
+              arePiecesDraggable={!opponentMovePending && !puzzleSolved}
               selected={selected}
+              optionSquares={optionSquares}
               incorrectSquare={incorrectSquare}
               wrongMoveActive={wrongMoveActive}
               hintSquare={hintSquare}
