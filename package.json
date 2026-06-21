@@ -12,7 +12,9 @@
     "lint": "eslint",
     "setup": "npm run anchor-build && npm run codama:js",
     "start": "next start",
-    "import-puzzles": "tsx --env-file=.env.local --tsconfig tsconfig.scripts.json script/puzzle-import.ts"
+    "import-puzzles": "tsx --env-file=.env.local --tsconfig tsconfig.scripts.json script/puzzle-import.ts",
+    "rewards:admin": "tsx --tsconfig tsconfig.scripts.json script/rewards-admin/index.ts",
+    "rewards:init": "pnpm rewards:admin all"
   },
   "description": "Next.js, Tailwind, @solana/kit, Anchor vault program",
   "keywords": [
@@ -27,6 +29,8 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@metaplex-foundation/umi": "^1.5.1",
+    "@metaplex-foundation/umi-bundle-defaults": "^1.5.1",
     "@noble/curves": "^2.2.0",
     "@solana/kit": "^6.3.0",
     "@solana/kit-client-rpc": "^0.7.0",

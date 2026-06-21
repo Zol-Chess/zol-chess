@@ -1,0 +1,33 @@
+{
+  "tokenMetadataUri": "https://example.com/zol-token.json",
+  "collection": {
+    "name": "ZolChess Achievements",
+    "uri": "https://example.com/zol-achievements.json"
+  },
+  "achievements": [
+    {
+      "id": 1,
+      "requiredBit": "1",
+      "name": "First Victory",
+      "uri": "https://example.com/achievements/first-victory.json"
+    },
+    {
+      "id": 2,
+      "requiredBit": "2",
+      "name": "Five Win Streak",
+      "uri": "https://example.com/achievements/five-win-streak.json"
+    },
+    {
+      "id": 3,
+      "requiredBit": "4",
+      "name": "Ten Puzzles",
+      "uri": "https://example.com/achievements/ten-puzzles.json"
+    },
+    {
+      "id": 4,
+      "requiredBit": "8",
+      "name": "Puzzle Centurion",
+      "uri": "https://example.com/achievements/puzzle-centurion.json"
+    }
+  ]
+}

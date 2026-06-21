@@ -6,5 +6,11 @@
  * @see https://github.com/codama-idl/codama
  */
 
+export * from "./claimAchievement";
+export * from "./claimTokens";
+export * from "./createAchievementReward";
+export * from "./initializeRewardCollection";
+export * from "./initializeRewardMint";
+export * from "./initializeRewards";
 export * from "./initializeUser";
 export * from "./submitPuzzle";

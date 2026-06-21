@@ -14,12 +14,12 @@ import {
   type ProgramDerivedAddress,
 } from "@solana/kit";
 
-export type SubmitPuzzlePlayerInfoSeeds = {
-  authority: Address;
+export type PlayerProfileSeeds = {
+  player: Address;
 };
 
-export async function findSubmitPuzzlePlayerInfoPda(
-  seeds: SubmitPuzzlePlayerInfoSeeds,
+export async function findPlayerProfilePda(
+  seeds: PlayerProfileSeeds,
   config: { programAddress?: Address | undefined } = {},
 ): Promise<ProgramDerivedAddress> {
   const {
@@ -31,7 +31,7 @@ export async function findSubmitPuzzlePlayerInfoPda(
       getBytesEncoder().encode(
         new Uint8Array([112, 108, 97, 121, 101, 114, 95, 105, 110, 102, 111]),
       ),
-      getAddressEncoder().encode(seeds.authority),
+      getAddressEncoder().encode(seeds.player),
     ],
   });
 }

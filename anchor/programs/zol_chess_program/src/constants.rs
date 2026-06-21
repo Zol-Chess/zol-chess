@@ -20,3 +20,11 @@ pub const HUNDRED_PUZZLES: u64 = 1 << 3;
 pub const PLAYER_SEED: &[u8] = b"player_info";
 
 pub const PUZZLE_HISTORY_SEED: &[u8] = b"puzzle_history";
+pub const REWARDS_CONFIG_SEED: &[u8] = b"rewards_config";
+pub const REWARDS_AUTHORITY_SEED: &[u8] = b"rewards_authority";
+pub const REWARDS_MINT_SEED: &[u8] = b"rewards_mint";
+pub const REWARDS_COLLECTION_SEED: &[u8] = b"rewards_collection";
+pub const ACHIEVEMENT_REWARD_SEED: &[u8] = b"achievement_reward";
+pub const ACHIEVEMENT_CLAIM_SEED: &[u8] = b"achievement_claim";
+
+pub const INITIAL_REWARDS_ADMIN: Pubkey = pubkey!("FvjNP5Lh19KCumNWLQc87q61Bnp2KR7Q1Tqgohoq1QLh");

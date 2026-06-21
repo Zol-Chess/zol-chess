@@ -10,16 +10,18 @@ import {
   getAddressEncoder,
   getBytesEncoder,
   getProgramDerivedAddress,
+  getU16Encoder,
   type Address,
   type ProgramDerivedAddress,
 } from "@solana/kit";
 
-export type SubmitPuzzlePlayerInfoSeeds = {
-  authority: Address;
+export type UserAchievementClaimSeeds = {
+  player: Address;
+  achievementId: number;
 };
 
-export async function findSubmitPuzzlePlayerInfoPda(
-  seeds: SubmitPuzzlePlayerInfoSeeds,
+export async function findUserAchievementClaimPda(
+  seeds: UserAchievementClaimSeeds,
   config: { programAddress?: Address | undefined } = {},
 ): Promise<ProgramDerivedAddress> {
   const {
@@ -29,9 +31,13 @@ export async function findSubmitPuzzlePlayerInfoPda(
     programAddress,
     seeds: [
       getBytesEncoder().encode(
-        new Uint8Array([112, 108, 97, 121, 101, 114, 95, 105, 110, 102, 111]),
+        new Uint8Array([
+          97, 99, 104, 105, 101, 118, 101, 109, 101, 110, 116, 95, 99, 108, 97,
+          105, 109,
+        ]),
       ),
-      getAddressEncoder().encode(seeds.authority),
+      getAddressEncoder().encode(seeds.player),
+      getU16Encoder().encode(seeds.achievementId),
     ],
   });
 }

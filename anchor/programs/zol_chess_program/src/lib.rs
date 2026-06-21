@@ -42,4 +42,40 @@ pub mod zol_chess_program {
             solution_signature,
         )
     }
+
+    pub fn initialize_rewards(ctx: Context<InitializeRewards>) -> Result<()> {
+        ctx.accounts.init(ctx.bumps)
+    }
+
+    pub fn initialize_reward_mint(ctx: Context<InitializeRewardMint>, uri: String) -> Result<()> {
+        ctx.accounts.init(uri, ctx.bumps)
+    }
+
+    pub fn initialize_reward_collection(
+        ctx: Context<InitializeRewardCollection>,
+        name: String,
+        uri: String,
+    ) -> Result<()> {
+        ctx.accounts.init_collection(name, uri, ctx.bumps)
+    }
+
+    pub fn create_achievement_reward(
+        ctx: Context<CreateAchievementReward>,
+        achievement_id: u16,
+        required_bit: u64,
+        name: String,
+        uri: String,
+    ) -> Result<()> {
+        ctx.accounts
+            .create(achievement_id, required_bit, name, uri, ctx.bumps)
+    }
+
+    pub fn claim_tokens(ctx: Context<ClaimTokens>) -> Result<()> {
+        ctx.accounts.claim()
+    }
+
+    pub fn claim_achievement(ctx: Context<ClaimAchievement>, achievement_id: u16) -> Result<()> {
+        let _ = achievement_id;
+        ctx.accounts.mint_asset(ctx.bumps)
+    }
 }

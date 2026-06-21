@@ -6,6 +6,12 @@
  * @see https://github.com/codama-idl/codama
  */
 
+export * from "./achievementReward";
 export * from "./playerInfo";
+export * from "./playerProfile";
 export * from "./puzzleHistory";
+export * from "./rewardAuthority";
+export * from "./rewardConfig";
+export * from "./rewardMint";
 export * from "./submitPuzzlePlayerInfo";
+export * from "./userAchievementClaim";

@@ -14,4 +14,5 @@ pub struct PlayerProfile {
     pub achievements: u64,
     pub last_active: i64,
     pub bump: u8,
+    pub claimed_points: u32,
 }
