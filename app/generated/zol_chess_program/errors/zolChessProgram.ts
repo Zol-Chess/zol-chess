@@ -22,11 +22,47 @@ export const ZOL_CHESS_PROGRAM_ERROR__INVALID_PUZZLE_ID = 0x1771; // 6001
 export const ZOL_CHESS_PROGRAM_ERROR__UNAUTHORIZED_ACCESS = 0x1772; // 6002
 /** MathsOverflow: Detected a mathematical overflow */
 export const ZOL_CHESS_PROGRAM_ERROR__MATHS_OVERFLOW = 0x1773; // 6003
+/** InvalidUpdateAuthority: Invalid update authority */
+export const ZOL_CHESS_PROGRAM_ERROR__INVALID_UPDATE_AUTHORITY = 0x1774; // 6004
+/** RewardMintAlreadyInitialized: Reward mint has already been initialized */
+export const ZOL_CHESS_PROGRAM_ERROR__REWARD_MINT_ALREADY_INITIALIZED = 0x1775; // 6005
+/** RewardCollectionAlreadyInitialized: Reward collection has already been initialized */
+export const ZOL_CHESS_PROGRAM_ERROR__REWARD_COLLECTION_ALREADY_INITIALIZED = 0x1776; // 6006
+/** MetadataNameTooLong: Metadata name too long */
+export const ZOL_CHESS_PROGRAM_ERROR__METADATA_NAME_TOO_LONG = 0x1777; // 6007
+/** MetadataUriTooLong: Metadata uri too long */
+export const ZOL_CHESS_PROGRAM_ERROR__METADATA_URI_TOO_LONG = 0x1778; // 6008
+/** InvalidAchievementBit: Achievement required bit must contain exactly one bit */
+export const ZOL_CHESS_PROGRAM_ERROR__INVALID_ACHIEVEMENT_BIT = 0x1779; // 6009
+/** RewardsPaused: Rewards are paused */
+export const ZOL_CHESS_PROGRAM_ERROR__REWARDS_PAUSED = 0x177a; // 6010
+/** NoRewardsToClaim: No rewards are available to claim */
+export const ZOL_CHESS_PROGRAM_ERROR__NO_REWARDS_TO_CLAIM = 0x177b; // 6011
+/** InvalidRewardMint: The reward mint does not match the configured mint */
+export const ZOL_CHESS_PROGRAM_ERROR__INVALID_REWARD_MINT = 0x177c; // 6012
+/** InvalidRewardCollection: The reward collection does not match the configured collection */
+export const ZOL_CHESS_PROGRAM_ERROR__INVALID_REWARD_COLLECTION = 0x177d; // 6013
+/** AchievementInactive: The achievement reward is inactive */
+export const ZOL_CHESS_PROGRAM_ERROR__ACHIEVEMENT_INACTIVE = 0x177e; // 6014
+/** AchievementNotUnlocked: The player has not unlocked this achievement */
+export const ZOL_CHESS_PROGRAM_ERROR__ACHIEVEMENT_NOT_UNLOCKED = 0x177f; // 6015
 
 export type ZolChessProgramError =
+  | typeof ZOL_CHESS_PROGRAM_ERROR__ACHIEVEMENT_INACTIVE
+  | typeof ZOL_CHESS_PROGRAM_ERROR__ACHIEVEMENT_NOT_UNLOCKED
+  | typeof ZOL_CHESS_PROGRAM_ERROR__INVALID_ACHIEVEMENT_BIT
   | typeof ZOL_CHESS_PROGRAM_ERROR__INVALID_PUZZLE_ID
+  | typeof ZOL_CHESS_PROGRAM_ERROR__INVALID_REWARD_COLLECTION
+  | typeof ZOL_CHESS_PROGRAM_ERROR__INVALID_REWARD_MINT
   | typeof ZOL_CHESS_PROGRAM_ERROR__INVALID_SIGNATURE
+  | typeof ZOL_CHESS_PROGRAM_ERROR__INVALID_UPDATE_AUTHORITY
   | typeof ZOL_CHESS_PROGRAM_ERROR__MATHS_OVERFLOW
+  | typeof ZOL_CHESS_PROGRAM_ERROR__METADATA_NAME_TOO_LONG
+  | typeof ZOL_CHESS_PROGRAM_ERROR__METADATA_URI_TOO_LONG
+  | typeof ZOL_CHESS_PROGRAM_ERROR__NO_REWARDS_TO_CLAIM
+  | typeof ZOL_CHESS_PROGRAM_ERROR__REWARD_COLLECTION_ALREADY_INITIALIZED
+  | typeof ZOL_CHESS_PROGRAM_ERROR__REWARD_MINT_ALREADY_INITIALIZED
+  | typeof ZOL_CHESS_PROGRAM_ERROR__REWARDS_PAUSED
   | typeof ZOL_CHESS_PROGRAM_ERROR__UNAUTHORIZED_ACCESS;
 
 let zolChessProgramErrorMessages:
@@ -34,9 +70,21 @@ let zolChessProgramErrorMessages:
   | undefined;
 if (process.env.NODE_ENV !== "production") {
   zolChessProgramErrorMessages = {
+    [ZOL_CHESS_PROGRAM_ERROR__ACHIEVEMENT_INACTIVE]: `The achievement reward is inactive`,
+    [ZOL_CHESS_PROGRAM_ERROR__ACHIEVEMENT_NOT_UNLOCKED]: `The player has not unlocked this achievement`,
+    [ZOL_CHESS_PROGRAM_ERROR__INVALID_ACHIEVEMENT_BIT]: `Achievement required bit must contain exactly one bit`,
     [ZOL_CHESS_PROGRAM_ERROR__INVALID_PUZZLE_ID]: `This puzzle id is invalid`,
+    [ZOL_CHESS_PROGRAM_ERROR__INVALID_REWARD_COLLECTION]: `The reward collection does not match the configured collection`,
+    [ZOL_CHESS_PROGRAM_ERROR__INVALID_REWARD_MINT]: `The reward mint does not match the configured mint`,
     [ZOL_CHESS_PROGRAM_ERROR__INVALID_SIGNATURE]: `The signature is invalid`,
+    [ZOL_CHESS_PROGRAM_ERROR__INVALID_UPDATE_AUTHORITY]: `Invalid update authority`,
     [ZOL_CHESS_PROGRAM_ERROR__MATHS_OVERFLOW]: `Detected a mathematical overflow`,
+    [ZOL_CHESS_PROGRAM_ERROR__METADATA_NAME_TOO_LONG]: `Metadata name too long`,
+    [ZOL_CHESS_PROGRAM_ERROR__METADATA_URI_TOO_LONG]: `Metadata uri too long`,
+    [ZOL_CHESS_PROGRAM_ERROR__NO_REWARDS_TO_CLAIM]: `No rewards are available to claim`,
+    [ZOL_CHESS_PROGRAM_ERROR__REWARD_COLLECTION_ALREADY_INITIALIZED]: `Reward collection has already been initialized`,
+    [ZOL_CHESS_PROGRAM_ERROR__REWARD_MINT_ALREADY_INITIALIZED]: `Reward mint has already been initialized`,
+    [ZOL_CHESS_PROGRAM_ERROR__REWARDS_PAUSED]: `Rewards are paused`,
     [ZOL_CHESS_PROGRAM_ERROR__UNAUTHORIZED_ACCESS]: `Unauthorized access`,
   };
 }

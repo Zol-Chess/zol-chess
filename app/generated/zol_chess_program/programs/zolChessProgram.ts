@@ -17,8 +17,20 @@ import {
   type ReadonlyUint8Array,
 } from "@solana/kit";
 import {
+  parseClaimAchievementInstruction,
+  parseClaimTokensInstruction,
+  parseCreateAchievementRewardInstruction,
+  parseInitializeRewardCollectionInstruction,
+  parseInitializeRewardMintInstruction,
+  parseInitializeRewardsInstruction,
   parseInitializeUserInstruction,
   parseSubmitPuzzleInstruction,
+  type ParsedClaimAchievementInstruction,
+  type ParsedClaimTokensInstruction,
+  type ParsedCreateAchievementRewardInstruction,
+  type ParsedInitializeRewardCollectionInstruction,
+  type ParsedInitializeRewardMintInstruction,
+  type ParsedInitializeRewardsInstruction,
   type ParsedInitializeUserInstruction,
   type ParsedSubmitPuzzleInstruction,
 } from "../instructions";
@@ -27,14 +39,28 @@ export const ZOL_CHESS_PROGRAM_PROGRAM_ADDRESS =
   "4DbgpcAxF7u3Uf2T2obBLZXuHZCECnG3mEjrgxxqFr5K" as Address<"4DbgpcAxF7u3Uf2T2obBLZXuHZCECnG3mEjrgxxqFr5K">;
 
 export enum ZolChessProgramAccount {
+  AchievementReward,
   PlayerProfile,
   PuzzleHistory,
+  RewardsConfig,
+  UserAchievementClaim,
 }
 
 export function identifyZolChessProgramAccount(
   account: { data: ReadonlyUint8Array } | ReadonlyUint8Array,
 ): ZolChessProgramAccount {
   const data = "data" in account ? account.data : account;
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([75, 159, 214, 117, 149, 8, 53, 1]),
+      ),
+      0,
+    )
+  ) {
+    return ZolChessProgramAccount.AchievementReward;
+  }
   if (
     containsBytes(
       data,
@@ -57,12 +83,40 @@ export function identifyZolChessProgramAccount(
   ) {
     return ZolChessProgramAccount.PuzzleHistory;
   }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([27, 65, 81, 182, 166, 101, 190, 207]),
+      ),
+      0,
+    )
+  ) {
+    return ZolChessProgramAccount.RewardsConfig;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([226, 211, 22, 21, 241, 134, 88, 168]),
+      ),
+      0,
+    )
+  ) {
+    return ZolChessProgramAccount.UserAchievementClaim;
+  }
   throw new Error(
     "The provided account could not be identified as a zolChessProgram account.",
   );
 }
 
 export enum ZolChessProgramInstruction {
+  ClaimAchievement,
+  ClaimTokens,
+  CreateAchievementReward,
+  InitializeRewardCollection,
+  InitializeRewardMint,
+  InitializeRewards,
   InitializeUser,
   SubmitPuzzle,
 }
@@ -71,6 +125,72 @@ export function identifyZolChessProgramInstruction(
   instruction: { data: ReadonlyUint8Array } | ReadonlyUint8Array,
 ): ZolChessProgramInstruction {
   const data = "data" in instruction ? instruction.data : instruction;
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([107, 181, 102, 247, 207, 212, 251, 24]),
+      ),
+      0,
+    )
+  ) {
+    return ZolChessProgramInstruction.ClaimAchievement;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([108, 216, 210, 231, 0, 212, 42, 64]),
+      ),
+      0,
+    )
+  ) {
+    return ZolChessProgramInstruction.ClaimTokens;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([107, 237, 247, 95, 216, 172, 33, 97]),
+      ),
+      0,
+    )
+  ) {
+    return ZolChessProgramInstruction.CreateAchievementReward;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([153, 143, 243, 39, 80, 128, 247, 230]),
+      ),
+      0,
+    )
+  ) {
+    return ZolChessProgramInstruction.InitializeRewardCollection;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([136, 219, 113, 48, 109, 59, 18, 208]),
+      ),
+      0,
+    )
+  ) {
+    return ZolChessProgramInstruction.InitializeRewardMint;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([91, 174, 112, 191, 233, 236, 147, 12]),
+      ),
+      0,
+    )
+  ) {
+    return ZolChessProgramInstruction.InitializeRewards;
+  }
   if (
     containsBytes(
       data,
@@ -102,6 +222,24 @@ export type ParsedZolChessProgramInstruction<
   TProgram extends string = "4DbgpcAxF7u3Uf2T2obBLZXuHZCECnG3mEjrgxxqFr5K",
 > =
   | ({
+      instructionType: ZolChessProgramInstruction.ClaimAchievement;
+    } & ParsedClaimAchievementInstruction<TProgram>)
+  | ({
+      instructionType: ZolChessProgramInstruction.ClaimTokens;
+    } & ParsedClaimTokensInstruction<TProgram>)
+  | ({
+      instructionType: ZolChessProgramInstruction.CreateAchievementReward;
+    } & ParsedCreateAchievementRewardInstruction<TProgram>)
+  | ({
+      instructionType: ZolChessProgramInstruction.InitializeRewardCollection;
+    } & ParsedInitializeRewardCollectionInstruction<TProgram>)
+  | ({
+      instructionType: ZolChessProgramInstruction.InitializeRewardMint;
+    } & ParsedInitializeRewardMintInstruction<TProgram>)
+  | ({
+      instructionType: ZolChessProgramInstruction.InitializeRewards;
+    } & ParsedInitializeRewardsInstruction<TProgram>)
+  | ({
       instructionType: ZolChessProgramInstruction.InitializeUser;
     } & ParsedInitializeUserInstruction<TProgram>)
   | ({
@@ -113,6 +251,48 @@ export function parseZolChessProgramInstruction<TProgram extends string>(
 ): ParsedZolChessProgramInstruction<TProgram> {
   const instructionType = identifyZolChessProgramInstruction(instruction);
   switch (instructionType) {
+    case ZolChessProgramInstruction.ClaimAchievement: {
+      assertIsInstructionWithAccounts(instruction);
+      return {
+        instructionType: ZolChessProgramInstruction.ClaimAchievement,
+        ...parseClaimAchievementInstruction(instruction),
+      };
+    }
+    case ZolChessProgramInstruction.ClaimTokens: {
+      assertIsInstructionWithAccounts(instruction);
+      return {
+        instructionType: ZolChessProgramInstruction.ClaimTokens,
+        ...parseClaimTokensInstruction(instruction),
+      };
+    }
+    case ZolChessProgramInstruction.CreateAchievementReward: {
+      assertIsInstructionWithAccounts(instruction);
+      return {
+        instructionType: ZolChessProgramInstruction.CreateAchievementReward,
+        ...parseCreateAchievementRewardInstruction(instruction),
+      };
+    }
+    case ZolChessProgramInstruction.InitializeRewardCollection: {
+      assertIsInstructionWithAccounts(instruction);
+      return {
+        instructionType: ZolChessProgramInstruction.InitializeRewardCollection,
+        ...parseInitializeRewardCollectionInstruction(instruction),
+      };
+    }
+    case ZolChessProgramInstruction.InitializeRewardMint: {
+      assertIsInstructionWithAccounts(instruction);
+      return {
+        instructionType: ZolChessProgramInstruction.InitializeRewardMint,
+        ...parseInitializeRewardMintInstruction(instruction),
+      };
+    }
+    case ZolChessProgramInstruction.InitializeRewards: {
+      assertIsInstructionWithAccounts(instruction);
+      return {
+        instructionType: ZolChessProgramInstruction.InitializeRewards,
+        ...parseInitializeRewardsInstruction(instruction),
+      };
+    }
     case ZolChessProgramInstruction.InitializeUser: {
       assertIsInstructionWithAccounts(instruction);
       return {

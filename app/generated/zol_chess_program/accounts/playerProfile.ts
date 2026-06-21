@@ -67,6 +67,7 @@ export type PlayerProfile = {
   achievements: bigint;
   lastActive: bigint;
   bump: number;
+  claimedPoints: number;
 };
 
 export type PlayerProfileArgs = {
@@ -80,6 +81,7 @@ export type PlayerProfileArgs = {
   achievements: number | bigint;
   lastActive: number | bigint;
   bump: number;
+  claimedPoints: number;
 };
 
 /** Gets the encoder for {@link PlayerProfileArgs} account data. */
@@ -97,6 +99,7 @@ export function getPlayerProfileEncoder(): FixedSizeEncoder<PlayerProfileArgs> {
       ["achievements", getU64Encoder()],
       ["lastActive", getI64Encoder()],
       ["bump", getU8Encoder()],
+      ["claimedPoints", getU32Encoder()],
     ]),
     (value) => ({ ...value, discriminator: PLAYER_PROFILE_DISCRIMINATOR }),
   );
@@ -116,6 +119,7 @@ export function getPlayerProfileDecoder(): FixedSizeDecoder<PlayerProfile> {
     ["achievements", getU64Decoder()],
     ["lastActive", getI64Decoder()],
     ["bump", getU8Decoder()],
+    ["claimedPoints", getU32Decoder()],
   ]);
 }
 
@@ -185,5 +189,5 @@ export async function fetchAllMaybePlayerProfile(
 }
 
 export function getPlayerProfileSize(): number {
-  return 83;
+  return 87;
 }

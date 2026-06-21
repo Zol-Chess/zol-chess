@@ -63,6 +63,7 @@ impl<'info> SubmitPuzzle<'info> {
             player_info.highest_rating = INITIAL_PLAYER_RATING;
             player_info.last_active = timestamp;
             player_info.bump = bumps.player_info;
+            player_info.claimed_points = 0;
         }
 
         if history.player == Pubkey::default() {

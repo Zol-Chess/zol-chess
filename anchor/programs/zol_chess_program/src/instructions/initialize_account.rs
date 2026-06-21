@@ -31,6 +31,7 @@ impl<'info> InitialzeAccount<'info> {
             achievements: 0,
             last_active: Clock::get()?.unix_timestamp,
             bump: bumps.player_info,
+            claimed_points: 0,
         });
         Ok(())
     }
