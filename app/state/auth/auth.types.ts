@@ -34,6 +34,7 @@ export interface User {
   claimable_sol?: number;
   nft_count?: number;
   achievements?: string[];
+  achievementsMask?: number;
 
   // Referral System
   //   referral_code?: string

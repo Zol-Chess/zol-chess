@@ -79,10 +79,10 @@ const DailyPuzzles = () => {
               Difficulty:
             </span>
             <span className="font-mono text-xs text-primary font-bold leading-short">
-              {user?.next_difficulty ?? "399"}+
+              {user?.next_difficulty ?? "---"}+
             </span>
           </div>
-          <div className="flex justify-between items-center py-2 border-b border-primary/10">
+          {/* <div className="flex justify-between items-center py-2 border-b border-primary/10">
             <span className="font-mono text-xs text-chess-muted uppercase tracking-widest leading-short">
               Reward
             </span>
@@ -90,7 +90,7 @@ const DailyPuzzles = () => {
               <SolanaIcon className="w-3 h-3" />
               0.25 SOL
             </div>
-          </div>
+          </div> */}
         </div>
 
         <button

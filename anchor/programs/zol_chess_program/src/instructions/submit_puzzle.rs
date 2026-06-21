@@ -1,10 +1,14 @@
 use anchor_lang::prelude::*;
+
+#[cfg(not(feature = "testing"))]
 use brine_ed25519::{hasher::Sha512, verify, Signature};
 
 use crate::{
     ChessErrors, PlayerProfile, PuzzleHistory, FIRST_WIN, FIVE_STREAK, HUNDRED_PUZZLES,
-    INITIAL_PLAYER_RATING, PLAYER_SEED, PUZZLE_HISTORY_SEED, PUZZLE_PUBLIC_KEY, TEN_PUZZLES,
+    INITIAL_PLAYER_RATING, PLAYER_SEED, PUZZLE_HISTORY_SEED, TEN_PUZZLES,
 };
+#[cfg(not(feature = "testing"))]
+use crate::PUZZLE_PUBLIC_KEY;
 
 #[derive(Accounts)]
 pub struct SubmitPuzzle<'info> {
@@ -41,16 +45,18 @@ impl<'info> SubmitPuzzle<'info> {
         solution_signature: [u8; 64],
     ) -> Result<()> {
         msg!("START");
-        // Pass message as three slices — avoids format!/base58 (~1M CU cost in BPF).
-        // Message layout: puzzle_id_utf8 | ':' | authority_pubkey_raw_32_bytes
-        let signature = Signature::from(solution_signature);
-        let pk = PUZZLE_PUBLIC_KEY.to_bytes();
-        verify::<Sha512>(
-            &pk,
-            &signature,
-            &[puzzle_id.as_bytes(), b":", self.authority.key().as_ref()],
-        )
-        .map_err(|_| ChessErrors::InvalidSignature)?;
+        #[cfg(not(feature = "testing"))]
+        {
+            // Message layout: puzzle_id_utf8 | ':' | authority_pubkey_raw_32_bytes
+            let signature = Signature::from(solution_signature);
+            let pk = PUZZLE_PUBLIC_KEY.to_bytes();
+            verify::<Sha512>(
+                &pk,
+                &signature,
+                &[puzzle_id.as_bytes(), b":", self.authority.key().as_ref()],
+            )
+            .map_err(|_| ChessErrors::InvalidSignature)?;
+        }
 
         let history = &mut self.puzzle_history;
         let player_info = &mut self.player_info;

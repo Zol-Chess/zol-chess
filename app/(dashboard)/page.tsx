@@ -45,7 +45,7 @@ export default function DashboardPage() {
         <DailyPuzzles />
       </div>
 
-      <LiveActivity />
+      {/* <LiveActivity /> */}
     </main>
   );
 }

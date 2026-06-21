@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { decryptSolution } from "@/script/encrypt-solution";
+import { decryptSolution } from "@/script/decrypt-solution";
 import { getPuzzleById } from "@/services/puzzle.ts";
 import { Puzzle } from "@/services/puzzle.ts/puzzle.types";
 import { showToast } from "@/lib/toast";

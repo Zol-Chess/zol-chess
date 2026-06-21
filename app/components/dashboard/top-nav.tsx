@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { toast } from "sonner";
 import { lamports as sol } from "@solana/kit";
 
 import { useWalletValues, WalletStatus } from "@/lib/wallet/context";
 import { useSolanaClient } from "@/lib/solana-client-context";
 import { useBalance } from "@/lib/hooks/use-balance";
+import { usePlayerProfile } from "@/lib/hooks/use-player-profile";
 import { useAuthStore } from "@/state/auth";
 
 import { useCluster } from "../cluster-context";
@@ -18,19 +19,41 @@ const WalletConnectionState: Partial<Record<WalletStatus, string>> = {
   error: "Connection Failed",
 };
 
-export function TopNav() {
+const TpsDisplay = memo(function TpsDisplay() {
   const [tps, setTps] = useState(3532);
-  const [solEarned, setSolEarned] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTps((prev) => Math.max(0, prev + Math.floor(Math.random() * 200) - 100));
+    }, 3000);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <div className="flex flex-col">
+      <span className="font-mono text-xs text-chess-muted uppercase tracking-widest leading-short">
+        Network TPS
+      </span>
+      <span className="font-mono text-primary leading-short text-sm font-bold">
+        {tps.toLocaleString()}
+      </span>
+    </div>
+  );
+});
+
+export function TopNav() {
+  const [solEarned, setSolEarned] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   const { wallet, connect, disconnect } = useWalletValues();
   const { cluster, getExplorerUrl } = useCluster();
   const client = useSolanaClient();
   const status = useAuthStore((state) => state.walletStatus);
   const user = useAuthStore((state) => state.user);
+  usePlayerProfile();
 
   const address = wallet?.account.address;
   const balance = useBalance(address);
   const [copied, setCopied] = useState(false);
+
+  // console.log(user);
 
   const handleCopy = async () => {
     if (!address) return;
@@ -83,15 +106,6 @@ export function TopNav() {
     }
   };
 
-  useEffect(() => {
-    const id = setInterval(() => {
-      setTps((prev) =>
-        Math.max(0, prev + Math.floor(Math.random() * 200) - 100)
-      );
-    }, 3000);
-    return () => clearInterval(id);
-  }, []);
-
   const handleWalletConnection = async () => {
     try {
       await connect();
@@ -120,22 +134,7 @@ export function TopNav() {
           <div className="h-6 w-px bg-primary/20 mx-2" />
 
           <div className="flex gap-6 items-center">
-            <div className="flex flex-col">
-              <span className="font-mono text-xs text-chess-muted uppercase tracking-widest leading-short">
-                Network TPS
-              </span>
-              <span className="font-mono text-primary leading-short text-sm font-bold">
-                {tps.toLocaleString()}
-              </span>
-            </div>
-            {/* <div className="flex flex-col">
-              <span className="font-mono text-xs text-chess-muted uppercase tracking-widest leading-short">
-                Epoch
-              </span>
-              <span className="font-mono text-primary leading-short text-sm font-bold">
-                642
-              </span>
-            </div> */}
+            <TpsDisplay />
           </div>
         </div>
 
@@ -144,11 +143,11 @@ export function TopNav() {
           <div className="hidden lg:flex items-center gap-3 bg-chess-container px-4 py-2 border border-primary/30">
             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             <span className="font-mono text-primary text-sm leading-short">
-              {solEarned} SOL EARNED
+              {user?.nft_count} REWARDS EARNED
             </span>
             <span className="font-mono text-chess-muted text-sm">|</span>
             <span className="font-mono text-foreground uppercase text-sm leading-short">
-              Player ${user?.player_rating}
+              Player #{user?.player_rating}
             </span>
           </div>
           <button
