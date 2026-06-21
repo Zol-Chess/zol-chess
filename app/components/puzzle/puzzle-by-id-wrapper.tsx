@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 
 import { decryptSolution } from "@/script/decrypt-solution";
 import { getPuzzleById } from "@/services/puzzle.ts";
@@ -16,23 +16,17 @@ interface PuzzleByIdWrapperProps {
 }
 
 const PuzzleByIdWrapper = ({ id }: PuzzleByIdWrapperProps) => {
-  const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
   const { signer, connect } = useWalletValues();
   const playerPubkey = signer?.address ?? "";
 
-  useEffect(() => {
-    if (!id || !playerPubkey) return;
-
-    setIsLoading(true);
-    setPuzzle(null);
-
-    getPuzzleById(id, playerPubkey)
-      .then(async (puzzleResponse) => {
+  const { data: puzzle, isLoading } = useSWR<Puzzle | null>(
+    id && playerPubkey ? ["puzzle", id, playerPubkey] : null,
+    async () => {
+      try {
+        const puzzleResponse = await getPuzzleById(id, playerPubkey);
         if (!puzzleResponse.encryptedSolution || !puzzleResponse.solutionKey) {
           showToast("Puzzle solution unavailable.", "error");
-          return;
+          return null;
         }
 
         const moves = await decryptSolution(
@@ -42,18 +36,16 @@ const PuzzleByIdWrapper = ({ id }: PuzzleByIdWrapperProps) => {
 
         if (!moves) {
           showToast("Failed to decrypt puzzle solution.", "error");
-          return;
+          return null;
         }
 
-        setPuzzle({ ...puzzleResponse, moves });
-      })
-      .catch((error) => {
+        return { ...puzzleResponse, moves };
+      } catch (error) {
         showToast(catchErr(error).message ?? "Failed to load puzzle.", "error");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [id, playerPubkey]);
+        return null;
+      }
+    }
+  );
 
   if (!playerPubkey) {
     return (
@@ -79,7 +71,14 @@ const PuzzleByIdWrapper = ({ id }: PuzzleByIdWrapperProps) => {
     );
   }
 
-  return <MainPlay signer={signer} puzzle={puzzle} isLoading={isLoading} />;
+  return (
+    <MainPlay
+      key={puzzle ? `${puzzle.puzzleId}:${puzzle.id ?? id}` : `${id}:loading`}
+      signer={signer}
+      puzzle={puzzle ?? null}
+      isLoading={isLoading}
+    />
+  );
 };
 
 export default PuzzleByIdWrapper;
