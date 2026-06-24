@@ -12,7 +12,7 @@ export function AchievementBadge({
   if (!unlocked) {
     return (
       <div className="aspect-square border border-primary/10 bg-chess-container flex flex-col items-center justify-center p-2 text-center opacity-40 grayscale">
-        <span className="material-symbols-outlined text-chess-muted text-2xl mb-1">
+        <span className="material-symbols-outlined text-chess-muted text-2xl mb-1.5">
           lock
         </span>
         <span className="font-mono text-xs text-chess-muted uppercase leading-tight">
