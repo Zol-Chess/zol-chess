@@ -1,4 +1,4 @@
-import { address, type IInstruction } from "@solana/kit";
+import { address, type Instruction } from "@solana/kit";
 
 const ED25519_PROGRAM_ADDRESS = address(
   "Ed25519SigVerify111111111111111111111111111"
@@ -8,10 +8,10 @@ const ED25519_PROGRAM_ADDRESS = address(
 // Must be the instruction immediately before submit_puzzle in the transaction.
 // The Solana runtime verifies the signature in native code — near-zero CU cost.
 export function buildEd25519Instruction(
-  signature: Uint8Array,  // 64 bytes
-  pubkey: Uint8Array,     // 32 bytes
+  signature: Uint8Array, // 64 bytes
+  pubkey: Uint8Array, // 32 bytes
   message: Uint8Array
-): IInstruction {
+): Instruction {
   // Data layout (all offsets relative to start of instruction data):
   // [0]       num_signatures = 1
   // [1]       padding = 0

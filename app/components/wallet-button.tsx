@@ -8,8 +8,7 @@ import { ellipsify } from "../lib/explorer";
 import { useCluster } from "./cluster-context";
 
 export function WalletButton() {
-  const { connectors, connect, disconnect, wallet, status, error } =
-    useWalletValues();
+  const { connect, disconnect, wallet, error } = useWalletValues();
 
   const { getExplorerUrl } = useCluster();
   const [isOpen, setIsOpen] = useState(false);
@@ -54,7 +53,7 @@ export function WalletButton() {
             <p className="mb-2 text-xs font-medium text-muted">
               Choose a wallet
             </p>
-            <div className="space-y-1">
+            {/* <div className="space-y-1">
               {connectors.map((connector) => (
                 <button
                   key={connector.id}
@@ -80,9 +79,7 @@ export function WalletButton() {
                 </button>
               ))}
             </div>
-            {status === "connecting" && (
-              <p className="mt-2 text-xs text-muted">Connecting...</p>
-            )}
+             */}
             {error != null && (
               <p className="mt-2 text-xs text-destructive">
                 {error instanceof Error ? error.message : String(error)}
