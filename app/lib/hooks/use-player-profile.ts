@@ -18,10 +18,12 @@ import { useWalletValues } from "../wallet/context";
 import { useSolanaClient } from "../solana-client-context";
 import { useSendTransaction } from "./use-send-transaction";
 import { showToast } from "../toast";
+import { useCluster } from "../../components/cluster-context";
 
 export function usePlayerProfile() {
   const { signer, wallet } = useWalletValues();
   const client = useSolanaClient();
+  const { cluster } = useCluster();
   const { send, isSending } = useSendTransaction();
   const address = wallet?.account.address;
 
@@ -31,11 +33,12 @@ export function usePlayerProfile() {
 
   useEffect(() => {
     initSentRef.current = false;
-  }, [signer]);
+    lastProfileRef.current = null;
+  }, [signer, cluster]);
 
   const { data, isLoading, mutate } = useSWR(
-    address ? ["chain-profile", address] : null,
-    async ([, addr]) => {
+    address ? ["chain-profile", cluster, address] : null,
+    async ([, , addr]) => {
       const [[playerInfoAddr], [puzzleHistoryAddr]] = await Promise.all([
         findPlayerInfoPda({ user: addr }),
         findPuzzleHistoryPda({ authority: addr }),

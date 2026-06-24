@@ -36,7 +36,6 @@ export type WalletStatus = (typeof WALLET_STATUS)[keyof typeof WALLET_STATUS];
 
 type WalletContextValue = {
   wallet: WalletSession | undefined;
-  signer: TransactionSigner | undefined;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
   error: unknown;

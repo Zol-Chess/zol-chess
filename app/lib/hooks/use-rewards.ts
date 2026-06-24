@@ -28,6 +28,7 @@ import { ZOL_CHESS_PROGRAM_PROGRAM_ADDRESS } from "@/generated/zol_chess_program
 import { showToast } from "@/lib/toast";
 import { catchErr } from "@/utils/error-handlers";
 
+import { useCluster } from "../../components/cluster-context";
 import { useSolanaClient } from "../solana-client-context";
 import { useWalletValues } from "../wallet/context";
 import { useSendTransaction } from "./use-send-transaction";
@@ -72,11 +73,12 @@ function decodeHistory(history: PuzzleHistory): PuzzleActivity[] {
 
 export function useRewards() {
   const client = useSolanaClient();
+  const { cluster } = useCluster();
   const { signer, wallet } = useWalletValues();
   const { send, isSending } = useSendTransaction();
   const player = wallet?.account.address;
 
-  const key = player && signer ? ["onchain-rewards", player] : null;
+  const key = player && signer ? ["onchain-rewards", cluster, player] : null;
   const { data, error, isLoading, mutate } = useSWR(key, async () => {
     const claimTokensInstruction = await getClaimTokensInstructionAsync({
       player: signer!,

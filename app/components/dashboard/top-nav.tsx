@@ -9,6 +9,7 @@ import { useSolanaClient } from "@/lib/solana-client-context";
 import { useBalance } from "@/lib/hooks/use-balance";
 import { usePlayerProfile } from "@/lib/hooks/use-player-profile";
 import { useAuthStore } from "@/state/auth";
+import { ClusterSelect } from "@/components/cluster-select";
 
 import { useCluster } from "../cluster-context";
 
@@ -23,7 +24,9 @@ const TpsDisplay = memo(function TpsDisplay() {
   const [tps, setTps] = useState(3532);
   useEffect(() => {
     const id = setInterval(() => {
-      setTps((prev) => Math.max(0, prev + Math.floor(Math.random() * 200) - 100));
+      setTps((prev) =>
+        Math.max(0, prev + Math.floor(Math.random() * 200) - 100)
+      );
     }, 3000);
     return () => clearInterval(id);
   }, []);
@@ -43,7 +46,7 @@ export function TopNav() {
   const [solEarned, setSolEarned] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   const { wallet, connect, disconnect } = useWalletValues();
-  const { cluster, getExplorerUrl } = useCluster();
+  const { getExplorerUrl } = useCluster();
   const client = useSolanaClient();
   const status = useAuthStore((state) => state.walletStatus);
   const user = useAuthStore((state) => state.user);
@@ -139,7 +142,7 @@ export function TopNav() {
         </div>
 
         {/* Right: wallet + button */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           <div className="hidden lg:flex items-center gap-3 bg-chess-container px-4 py-2 border border-primary/30">
             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             <span className="font-mono text-primary text-sm leading-short">
@@ -151,7 +154,7 @@ export function TopNav() {
             </span>
           </div>
           <button
-            className="bg-primary text-chess-bg px-6 py-2 font-bold hover:shadow-[0_0_15px_rgba(20,241,149,0.5)] cursor-pointer transition-all uppercase font-mono text-xs tracking-widest leading-short flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="bg-primary text-chess-bg px-6 py-2.5 font-bold hover:shadow-[0_0_15px_rgba(20,241,149,0.5)] cursor-pointer transition-all uppercase font-mono text-sm tracking-widest leading-short flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
             onClick={
               status === "disconnected" || status === "error"
                 ? handleWalletConnection
@@ -164,6 +167,7 @@ export function TopNav() {
             )}
             {(status && WalletConnectionState[status]) ?? "Connect Wallet"}
           </button>
+          <ClusterSelect />
         </div>
       </div>
     </header>
