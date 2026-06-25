@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { icon: "dashboard", label: "DASHBOARD", route: "/" },
   { icon: "extension", label: "PUZZLES", route: "/puzzles" },
   { icon: "workspace_premium", label: "REWARDS", route: "/rewards" },
-  { icon: "leaderboard", label: "LEADERBOARD", route: "/leaderboard" },
+  // { icon: "leaderboard", label: "LEADERBOARD", route: "/leaderboard" },
   // { icon: "token", label: "NFT COLLECTION", route: "/nft_collection" },
 ] as const;
 
@@ -21,6 +21,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   const user = useAuthStore((state) => state.user);
+  const walletStatus = useAuthStore((state) => state.walletStatus);
 
   return (
     <aside className="fixed left-0 top-16 h-[calc(100vh-64px)] w-64 bg-chess-container/50 border-r border-primary/20 flex flex-col py-6 backdrop-blur-sm z-40">
@@ -38,7 +39,7 @@ export function Sidebar() {
           className="font-bold text-md text-primary uppercase leading-short mb-1"
           style={{ fontFamily: "var(--font-space-grotesk, sans-serif)" }}
         >
-          PLAYER #{user?.player_rating ?? 399}
+          PLAYER #{user?.player_rating ?? "---"}
         </h3>
         <p className="font-mono text-xs text-chess-muted uppercase tracking-widest flex items-center gap-1 leading-short">
           <span className="w-1 h-1 bg-primary rounded-full capitalize" />
@@ -52,7 +53,11 @@ export function Sidebar() {
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.label}
-              href={item.route}
+              href={
+                walletStatus !== "connected" && item.route.includes("puzzles")
+                  ? "#"
+                  : item.route
+              }
               className={`flex items-center gap-4 px-6 py-4 font-mono text-xs uppercase tracking-wider leading-short transition-colors ${
                 pathname === item.route
                   ? "bg-primary/10 text-primary border-r-4 border-primary"
