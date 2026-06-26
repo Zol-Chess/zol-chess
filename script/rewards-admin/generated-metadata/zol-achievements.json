@@ -1,0 +1,11 @@
+{
+  "name": "ZolChess Achievements",
+  "description": "ZolChess achievement reward collection",
+  "image": "https://gateway.irys.xyz/HyJJvc2hBZ9vAV8iKtbks1ybTd9UAyTSLxEUuPjU6Dyi",
+  "attributes": [
+    {
+      "trait_type": "Collection",
+      "value": "Achievements"
+    }
+  ]
+}

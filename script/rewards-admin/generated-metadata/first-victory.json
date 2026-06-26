@@ -1,0 +1,15 @@
+{
+  "name": "First Victory",
+  "description": "ZolChess achievement reward: First Victory",
+  "image": "https://gateway.irys.xyz/DyCCudPYPVZKmcSY5AbMwbu5AsEPSeMtpwbhL6b3HHdt",
+  "attributes": [
+    {
+      "trait_type": "Achievement ID",
+      "value": 1
+    },
+    {
+      "trait_type": "Required Bit",
+      "value": "1"
+    }
+  ]
+}

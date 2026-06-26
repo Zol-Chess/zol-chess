@@ -1,0 +1,107 @@
+{
+  "generatedAt": "2026-06-25T12:17:52.801Z",
+  "clusterRpc": "https://api.devnet.solana.com",
+  "irysAddress": "https://devnet.irys.xyz/",
+  "tokenMetadataUri": "https://gateway.irys.xyz/DPmamEhwAgNZjMP36ybnii7jkMPtxppYXpoW6J1oSx5P",
+  "collectionMetadataUri": "https://gateway.irys.xyz/HaJC3BwSq3D9qGJZWogoiuzcBhBDd9qyaTYHadR1x79A",
+  "token": {
+    "name": "ZolChess Reward Token",
+    "imageFileName": "zol-logo.svg",
+    "imageUri": "https://gateway.irys.xyz/FF8xcWrxnwrYFBECXdAudszrHhWTkpPNcNQjQNVALE9w",
+    "metadataPath": "script/rewards-admin/generated-metadata/zol-token.json",
+    "metadataUri": "https://gateway.irys.xyz/DPmamEhwAgNZjMP36ybnii7jkMPtxppYXpoW6J1oSx5P"
+  },
+  "collection": {
+    "name": "ZolChess Achievements",
+    "imageFileName": "puzzle-centurion.png",
+    "imageUri": "https://gateway.irys.xyz/HyJJvc2hBZ9vAV8iKtbks1ybTd9UAyTSLxEUuPjU6Dyi",
+    "metadataPath": "script/rewards-admin/generated-metadata/zol-achievements.json",
+    "metadataUri": "https://gateway.irys.xyz/HaJC3BwSq3D9qGJZWogoiuzcBhBDd9qyaTYHadR1x79A"
+  },
+  "images": [
+    {
+      "fileName": "first-victory.png",
+      "slug": "first-victory",
+      "path": "public/achievements/images/first-victory.png",
+      "uri": "https://gateway.irys.xyz/DyCCudPYPVZKmcSY5AbMwbu5AsEPSeMtpwbhL6b3HHdt"
+    },
+    {
+      "fileName": "five-win-streak.png",
+      "slug": "five-win-streak",
+      "path": "public/achievements/images/five-win-streak.png",
+      "uri": "https://gateway.irys.xyz/13gLnXtPk3wQjy7jY88udCxk5bGv9vWHa8sQbpMAgmkW"
+    },
+    {
+      "fileName": "ten-puzzles.png",
+      "slug": "ten-puzzles",
+      "path": "public/achievements/images/ten-puzzles.png",
+      "uri": "https://gateway.irys.xyz/CewDLjrCfZSzJavJvwdBp8QucVFpXYcjHKfJGPAVmAfc"
+    },
+    {
+      "fileName": "puzzle-centurion.png",
+      "slug": "puzzle-centurion",
+      "path": "public/achievements/images/puzzle-centurion.png",
+      "uri": "https://gateway.irys.xyz/HyJJvc2hBZ9vAV8iKtbks1ybTd9UAyTSLxEUuPjU6Dyi"
+    }
+  ],
+  "achievements": [
+    {
+      "id": 1,
+      "requiredBit": "1",
+      "name": "First Victory",
+      "imageFileName": "first-victory.png",
+      "imageUri": "https://gateway.irys.xyz/DyCCudPYPVZKmcSY5AbMwbu5AsEPSeMtpwbhL6b3HHdt",
+      "metadataPath": "script/rewards-admin/generated-metadata/first-victory.json",
+      "metadataUri": "https://gateway.irys.xyz/2rHaxnEZK5qPopPqH1BQYkEsXorPevpoRv2GLGi6XQnb"
+    },
+    {
+      "id": 2,
+      "requiredBit": "2",
+      "name": "Five Win Streak",
+      "imageFileName": "five-win-streak.png",
+      "imageUri": "https://gateway.irys.xyz/13gLnXtPk3wQjy7jY88udCxk5bGv9vWHa8sQbpMAgmkW",
+      "metadataPath": "script/rewards-admin/generated-metadata/five-win-streak.json",
+      "metadataUri": "https://gateway.irys.xyz/D1Gg2kvGrZjZaV1yztocviv5D1NgAAATzmDRE6agDZaQ"
+    },
+    {
+      "id": 3,
+      "requiredBit": "4",
+      "name": "Ten Puzzles",
+      "imageFileName": "ten-puzzles.png",
+      "imageUri": "https://gateway.irys.xyz/CewDLjrCfZSzJavJvwdBp8QucVFpXYcjHKfJGPAVmAfc",
+      "metadataPath": "script/rewards-admin/generated-metadata/ten-puzzles.json",
+      "metadataUri": "https://gateway.irys.xyz/a6WC2gXi782JW5zK1J9Qhfmt4a7xqsPFP638EWsv5dR"
+    },
+    {
+      "id": 4,
+      "requiredBit": "8",
+      "name": "Puzzle Centurion",
+      "imageFileName": "puzzle-centurion.png",
+      "imageUri": "https://gateway.irys.xyz/HyJJvc2hBZ9vAV8iKtbks1ybTd9UAyTSLxEUuPjU6Dyi",
+      "metadataPath": "script/rewards-admin/generated-metadata/puzzle-centurion.json",
+      "metadataUri": "https://gateway.irys.xyz/QsvdAqn3y5xNaEWedeJXTsjXaHUUm2uhyVn4siPwCyA"
+    }
+  ],
+  "achievementInstructionUris": [
+    {
+      "id": 1,
+      "name": "First Victory",
+      "uri": "https://gateway.irys.xyz/2rHaxnEZK5qPopPqH1BQYkEsXorPevpoRv2GLGi6XQnb"
+    },
+    {
+      "id": 2,
+      "name": "Five Win Streak",
+      "uri": "https://gateway.irys.xyz/D1Gg2kvGrZjZaV1yztocviv5D1NgAAATzmDRE6agDZaQ"
+    },
+    {
+      "id": 3,
+      "name": "Ten Puzzles",
+      "uri": "https://gateway.irys.xyz/a6WC2gXi782JW5zK1J9Qhfmt4a7xqsPFP638EWsv5dR"
+    },
+    {
+      "id": 4,
+      "name": "Puzzle Centurion",
+      "uri": "https://gateway.irys.xyz/QsvdAqn3y5xNaEWedeJXTsjXaHUUm2uhyVn4siPwCyA"
+    }
+  ]
+}

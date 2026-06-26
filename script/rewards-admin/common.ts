@@ -53,7 +53,8 @@ export function parseOptions(args = process.argv.slice(2)): AdminOptions {
   const rpcUrl =
     valueAfter(args, "--rpc") ??
     process.env.SOLANA_RPC_URL ??
-    "http://127.0.0.1:8899";
+    // "http://127.0.0.1:8899";
+    "https://api.devnet.solana.com";
 
   return {
     command,
