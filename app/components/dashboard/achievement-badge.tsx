@@ -15,7 +15,7 @@ export function AchievementBadge({
         <span className="material-symbols-outlined text-chess-muted text-2xl mb-1">
           lock
         </span>
-        <span className="font-mono text-xs text-chess-muted uppercase leading-tight">
+        <span className="font-mono text-[10px] sm:text-xs text-chess-muted uppercase leading-tight break-words">
           {label}
         </span>
       </div>
@@ -27,7 +27,7 @@ export function AchievementBadge({
       <span className="material-symbols-outlined text-primary text-2xl mb-1">
         {icon}
       </span>
-      <span className="font-mono text-xs text-primary uppercase leading-tight leading-short">
+      <span className="font-mono text-[10px] sm:text-xs text-primary uppercase leading-tight leading-short break-words">
         {label}
       </span>
     </div>

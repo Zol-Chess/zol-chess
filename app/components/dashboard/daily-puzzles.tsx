@@ -59,11 +59,11 @@ const DailyPuzzles = () => {
   };
 
   return (
-    <div className="col-span-4">
-      <GlassPanel className="p-6 relative overflow-hidden h-full flex flex-col">
+    <div className="xl:col-span-4">
+      <GlassPanel className="p-5 sm:p-6 relative overflow-hidden h-full flex flex-col">
         {/* Active mission badge */}
         <div className="absolute top-0 right-0 p-4">
-          <div className="bg-primary/10 text-primary px-3 py-1 border border-primary/30 font-mono text-xs tracking-widest uppercase animate-pulse leading-short">
+          <div className="bg-primary/10 text-primary px-3 py-1 border border-primary/30 font-mono text-[10px] sm:text-xs tracking-normal sm:tracking-widest uppercase animate-pulse leading-short">
             ACTIVE MISSION
           </div>
         </div>
@@ -74,7 +74,7 @@ const DailyPuzzles = () => {
 
         {/* Puzzle meta */}
         <div className="space-y-3 mb-8">
-          <div className="flex justify-between items-center py-2 border-b border-primary/10">
+          <div className="flex justify-between items-center gap-4 py-2 border-b border-primary/10">
             <span className="font-mono text-xs text-chess-muted uppercase tracking-widest leading-short">
               Difficulty:
             </span>

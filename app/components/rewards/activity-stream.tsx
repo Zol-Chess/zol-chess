@@ -11,12 +11,12 @@ function resultClass(solved: boolean) {
 export function ActivityStream({ entries }: { entries: PuzzleActivity[] }) {
   return (
     <div className="lg:col-span-8 glass-panel overflow-hidden flex flex-col border border-primary/30 shadow-[0_0_15px_rgba(20,241,149,0.1),inset_0_0_10px_rgba(20,241,149,0.05)]">
-      <div className="p-6 border-b border-primary/20 flex flex-col md:flex-row md:justify-between md:items-center gap-4 bg-primary/5">
-        <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-foreground flex items-center gap-2 leading-short">
+      <div className="p-4 sm:p-6 border-b border-primary/20 flex flex-col md:flex-row md:justify-between md:items-center gap-4 bg-primary/5">
+        <h3 className="font-mono text-xs uppercase tracking-normal sm:tracking-[0.2em] text-foreground flex items-center gap-2 leading-short">
           <span className="w-2 h-2 bg-primary rounded-full" />
           Historical_Log_Stream
         </h3>
-        <div className="flex gap-4 items-center">
+        <div className="flex flex-wrap gap-3 sm:gap-4 items-center">
           <span className="px-3 py-1 bg-primary/10 border border-primary/30 text-[10px] text-primary font-mono uppercase leading-short">
             Source: Player_PDA
           </span>
@@ -27,7 +27,7 @@ export function ActivityStream({ entries }: { entries: PuzzleActivity[] }) {
       </div>
 
       <div className="overflow-x-auto flex-1">
-        <table className="w-full text-left border-collapse min-w-[620px]">
+        <table className="w-full text-left border-collapse min-w-[560px] sm:min-w-[620px]">
           <thead className="bg-chess-container-hi/50 text-chess-muted font-mono text-[10px] uppercase tracking-widest border-b border-primary/10">
             <tr>
               <th className="px-6 py-4 font-medium">PUZZLE_ID</th>

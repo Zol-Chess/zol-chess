@@ -1,20 +1,9 @@
-import { Sidebar } from "@/components/dashboard/sidebar";
-import { TopNav } from "@/components/dashboard/top-nav";
-import Footer from "@/components/footer";
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 
 export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <div className="circuit-bg min-h-screen">
-      <TopNav />
-      <Sidebar />
-
-      {children}
-
-      <Footer />
-    </div>
-  );
+  return <DashboardShell>{children}</DashboardShell>;
 }

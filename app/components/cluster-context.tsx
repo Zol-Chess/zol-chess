@@ -5,6 +5,7 @@ import {
   useContext,
   useState,
   useCallback,
+  useEffect,
   type ReactNode,
 } from "react";
 import type { ClusterMoniker } from "../lib/solana-client";
@@ -20,20 +21,20 @@ type ClusterContextValue = {
 const ClusterContext = createContext<ClusterContextValue | null>(null);
 
 const STORAGE_KEY = "solana-cluster";
-function getInitialCluster(): ClusterMoniker {
-  if (typeof window === "undefined") return "devnet";
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored && CLUSTERS.includes(stored as ClusterMoniker)) {
-    return stored as ClusterMoniker;
-  }
-  return "localnet";
-}
 
 export { CLUSTERS };
 
 export function ClusterProvider({ children }: { children: ReactNode }) {
-  const [cluster, setClusterState] =
-    useState<ClusterMoniker>(getInitialCluster);
+  const [cluster, setClusterState] = useState<ClusterMoniker>("devnet");
+
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && CLUSTERS.includes(stored as ClusterMoniker)) {
+      setClusterState(stored as ClusterMoniker);
+      return;
+    }
+    setClusterState("localnet");
+  }, []);
 
   const setCluster = useCallback((c: ClusterMoniker) => {
     setClusterState(c);

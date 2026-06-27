@@ -15,9 +15,9 @@ export function StreakCard({
   const segments = Array.from({ length: totalSegments }, (_, i) => i);
 
   return (
-    <div className="lg:col-span-4 glass-panel p-8 flex flex-col justify-between border border-primary/30 shadow-[0_0_15px_rgba(20,241,149,0.1),inset_0_0_10px_rgba(20,241,149,0.05)]">
+    <div className="lg:col-span-4 glass-panel p-5 sm:p-6 lg:p-8 flex flex-col justify-between border border-primary/30 shadow-[0_0_15px_rgba(20,241,149,0.1),inset_0_0_10px_rgba(20,241,149,0.05)]">
       <div>
-        <div className="flex justify-between items-center mb-8 border-b border-primary/20 pb-4">
+        <div className="flex justify-between items-center mb-6 lg:mb-8 border-b border-primary/20 pb-4">
           <p className="text-primary font-mono text-xs tracking-widest uppercase leading-short">
             UPTIME_STREAK
           </p>
@@ -25,7 +25,7 @@ export function StreakCard({
             sensors
           </span>
         </div>
-        <h2 className="text-[clamp(2.25rem,5vw,3.5rem)] font-display font-bold text-foreground leading-none">
+        <h2 className="text-[clamp(2rem,12vw,3.5rem)] font-display font-bold text-foreground leading-none">
           {currentStreak} WINS
         </h2>
         <p className="text-chess-muted font-mono text-xs mt-4 uppercase tracking-normal leading-long">

@@ -36,7 +36,7 @@ export function RewardsDashboard() {
 
   return (
     <>
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 mb-8 lg:mb-12">
         <RewardsTotalCard
           totalPoints={rewards.profile?.totalPoints ?? 0}
           claimedPoints={rewards.profile?.claimedPoints ?? 0}
@@ -54,8 +54,8 @@ export function RewardsDashboard() {
         />
       </section>
 
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-4 space-y-6">
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
+        <div className="lg:col-span-4 space-y-4 lg:space-y-6">
           <AchievementNodes
             achievements={rewards.achievements ?? []}
             isClaiming={rewards.isSending}

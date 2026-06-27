@@ -27,7 +27,7 @@ export function TacticalDossier({
   );
 
   return (
-    <GlassPanel className="p-6 flex flex-col">
+    <GlassPanel className="p-5 sm:p-6 flex flex-col">
       <SectionHeader title="Puzzle Details" badge={activeMissionBadge} />
 
       {/* Puzzle identity */}
@@ -38,14 +38,14 @@ export function TacticalDossier({
         >
           {puzzleId}
         </h3>
-        <p className="font-mono text-xs text-primary uppercase tracking-[0.2em] leading-short">
+        <p className="font-mono text-xs text-primary uppercase tracking-normal sm:tracking-[0.2em] leading-short break-words">
           {objective}
         </p>
       </div>
 
       {/* Stats */}
       <div className="space-y-4 font-mono mb-8">
-        <div className="flex justify-between items-center py-2 border-b border-primary/10">
+        <div className="flex justify-between items-center gap-4 py-2 border-b border-primary/10">
           <span className="text-chess-muted text-xs uppercase tracking-widest leading-short">
             Difficulty
           </span>
@@ -53,7 +53,7 @@ export function TacticalDossier({
             {threatLevel}
           </span>
         </div>
-        <div className="flex justify-between items-center py-2 border-b border-primary/10">
+        <div className="flex justify-between items-center gap-4 py-2 border-b border-primary/10">
           <span className="text-chess-muted text-xs uppercase tracking-widest leading-short">
             Puzzle Rating
           </span>
@@ -61,7 +61,7 @@ export function TacticalDossier({
             {eloIndex}
           </span>
         </div>
-        <div className="flex justify-between items-center py-2 border-b border-primary/10">
+        <div className="flex justify-between items-center gap-4 py-2 border-b border-primary/10">
           <span className="text-chess-muted text-xs uppercase tracking-widest leading-short">
             Player Color
           </span>
@@ -82,8 +82,8 @@ export function TacticalDossier({
 
       {/* Wallet */}
       <div className="bg-chess-container p-4 border border-primary/20">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <div className="w-10 h-10 bg-primary/10 flex items-center justify-center border border-primary/30">
               <span
                 className="material-symbols-outlined text-primary"
@@ -92,11 +92,11 @@ export function TacticalDossier({
                 account_balance_wallet
               </span>
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-xs text-chess-muted font-mono uppercase tracking-tighter leading-short">
                 Connected Wallet
               </p>
-              <p className="text-primary font-bold font-mono text-sm leading-short">
+              <p className="text-primary font-bold font-mono text-sm leading-short truncate">
                 SIG: {walletSig}
               </p>
             </div>

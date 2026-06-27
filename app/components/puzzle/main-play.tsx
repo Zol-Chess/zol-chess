@@ -287,8 +287,8 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
 
   if (isLoading) {
     return (
-      <main className="ml-64 pt-24 px-8 pb-12 max-w-360 relative flex items-center justify-center min-h-screen">
-        <span className="font-mono text-primary animate-pulse uppercase tracking-widest">
+      <main className="relative flex min-h-screen items-center justify-center px-4 pb-12 pt-28 sm:px-6 lg:ml-64 lg:px-8 lg:pb-12 lg:pt-24 max-w-360">
+        <span className="font-mono text-primary animate-pulse uppercase tracking-widest text-center">
           LOADING PUZZLE...
         </span>
       </main>
@@ -296,11 +296,11 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
   }
 
   return (
-    <main className="ml-64 pt-24 pl-4 pr-8 pb-12 max-w-360 relative">
+    <main className="relative px-4 pb-12 pt-28 sm:px-6 lg:ml-64 lg:pb-12 lg:pl-4 lg:pr-8 lg:pt-24 max-w-360">
       <div className="scanline" />
 
       {puzzleSolved && (
-        <div className="absolute top-28 left-1/2 -translate-x-1/2 z-50 bg-primary text-chess-bg font-mono font-bold text-sm px-8 py-3 uppercase tracking-widest shadow-[0_0_30px_rgba(20,241,149,0.6)] animate-pulse">
+        <div className="fixed left-4 right-4 top-24 z-50 bg-primary text-center text-chess-bg font-mono font-bold text-xs px-4 py-3 uppercase tracking-widest shadow-[0_0_30px_rgba(20,241,149,0.6)] animate-pulse sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:px-8 lg:top-28">
           PUZZLE COMPLETED ✓
         </div>
       )}
@@ -308,11 +308,11 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
       {/* History modal */}
       {showHistory && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
           onClick={() => setShowHistory(false)}
         >
           <div
-            className="glass-panel neon-border p-6 w-full max-w-md max-h-[70vh] flex flex-col"
+            className="glass-panel neon-border p-4 sm:p-6 w-full max-w-md max-h-[78vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4 border-b border-primary/20 pb-4">
@@ -350,9 +350,9 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
         </div>
       )}
 
-      <div className="grid grid-cols-12 gap-4 relative z-20">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 relative z-20">
         {/* ── Left column — board + actions (8 cols) ─────────── */}
-        <div className="col-span-8 flex flex-col gap-6">
+        <div className="xl:col-span-8 flex flex-col gap-4 lg:gap-6">
           {boardData?.fen && (
             <ChessBoard
               chessPosition={chessPosition}
@@ -381,7 +381,7 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
         </div>
 
         {/* ── Right column — dossier + logs (4 cols) ─────────── */}
-        <div className="col-span-4 flex flex-col gap-6">
+        <div className="xl:col-span-4 flex flex-col gap-4 lg:gap-6">
           <TacticalDossier
             puzzleId={puzzle ? `Puzzle #${puzzle.puzzleId}` : "—"}
             objective={boardData?.objective ?? "LOADING..."}

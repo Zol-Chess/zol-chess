@@ -18,9 +18,9 @@ function NeuralAchievements() {
   const mask = useAuthStore((s) => s.user?.achievementsMask ?? 0);
 
   return (
-    <GlassPanel className="p-6 flex flex-col">
+    <GlassPanel className="p-5 sm:p-6 flex flex-col">
       <SectionHeader title="Neural Achievement Grid" />
-      <div className="grid grid-cols-3 gap-4 flex-1 content-center">
+      <div className="grid grid-cols-2 xs:grid-cols-3 gap-3 sm:gap-4 flex-1 content-center">
         {ACHIEVEMENTS.map((a) => (
           <AchievementBadge
             key={a.label}

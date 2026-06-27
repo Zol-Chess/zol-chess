@@ -7,19 +7,19 @@ import LiveActivity from "@/components/dashboard/live-activity";
 
 export default function DashboardPage() {
   return (
-    <main className="ml-64 pt-24 px-8 pb-32 max-w-360 relative">
+    <main className="relative px-4 pb-16 pt-28 sm:px-6 lg:ml-64 lg:px-8 lg:pb-32 lg:pt-24 max-w-360">
       <div className="scanline" />
 
-      <header className="mb-10 flex flex-col md:flex-row justify-between items-end gap-6 relative z-20">
-        <div>
+      <header className="mb-8 lg:mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 relative z-20">
+        <div className="min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <div className="h-px w-8 bg-primary" />
-            <p className="text-primary font-mono text-xs tracking-[0.3em] uppercase leading-short">
+            <p className="text-primary font-mono text-xs tracking-normal sm:tracking-[0.3em] uppercase leading-short">
               Welcome to ZolChess
             </p>
           </div>
           <h1
-            className="text-3xl text-foreground font-bold uppercase tracking-tight leading-short"
+            className="text-2xl sm:text-3xl text-foreground font-bold uppercase tracking-tight leading-short"
             style={{ fontFamily: "var(--font-space-grotesk, sans-serif)" }}
           >
             Player Dashboard
@@ -32,9 +32,9 @@ export default function DashboardPage() {
         <Ranking />
       </header>
 
-      <div className="grid grid-cols-12 gap-6 relative z-20">
-        <div className="col-span-8 flex flex-col gap-6">
-          <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 lg:gap-6 relative z-20">
+        <div className="xl:col-span-8 flex flex-col gap-4 lg:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
             <PlayerProfile />
             <NeuralAchievements />
           </div>
