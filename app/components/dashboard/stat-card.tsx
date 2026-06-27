@@ -16,12 +16,12 @@ export function StatCard({
   glowValue = false,
 }: StatCardProps) {
   return (
-    <GlassPanel className="p-6 flex flex-col justify-between">
-      <div className="flex justify-between items-start mb-6">
+    <GlassPanel className="p-5 sm:p-6 flex flex-col justify-between">
+      <div className="flex justify-between items-start gap-3 mb-6">
         <div className="w-10 h-10 bg-primary/10 flex items-center justify-center border border-primary/30">
           <span className="material-symbols-outlined text-primary">{icon}</span>
         </div>
-        <span className="text-primary font-mono text-xs bg-primary/10 px-2 py-0.5 border border-primary/20 leading-short">
+        <span className="text-primary font-mono text-[10px] sm:text-xs bg-primary/10 px-2 py-0.5 border border-primary/20 leading-short text-right break-words">
           {badge}
         </span>
       </div>
@@ -30,7 +30,7 @@ export function StatCard({
           {label}
         </h4>
         <p
-          className={`font-mono text-h6 text-foreground font-bold leading-short ${glowValue ? "glow-text-green" : ""}`}
+          className={`font-mono text-h6 text-foreground font-bold leading-short break-words ${glowValue ? "glow-text-green" : ""}`}
         >
           {value}
         </p>

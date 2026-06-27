@@ -8,8 +8,8 @@ function Ranking() {
   const user = useAuthStore((state) => state.user);
 
   return (
-    <div className="flex gap-4">
-      <GlassPanel className="p-5 min-w-40">
+    <div className="grid w-full grid-cols-2 gap-3 sm:w-auto sm:gap-4">
+      <GlassPanel className="p-4 sm:p-5 min-w-0 sm:min-w-40">
         <span className="block font-mono text-xs text-chess-muted uppercase tracking-widest mb-2 border-b border-primary/20 pb-1 leading-short">
           Player Rating
         </span>
@@ -17,7 +17,7 @@ function Ranking() {
           #{user?.player_rating ?? "---"}
         </span>
       </GlassPanel>
-      <GlassPanel className="p-5 min-w-40">
+      <GlassPanel className="p-4 sm:p-5 min-w-0 sm:min-w-40">
         <span className="block font-mono text-xs text-chess-muted uppercase tracking-widest mb-2 border-b border-primary/20 pb-1 leading-short">
           Global Rank
         </span>

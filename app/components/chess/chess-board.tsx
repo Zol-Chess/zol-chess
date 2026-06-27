@@ -100,7 +100,7 @@ export function ChessBoard({
   };
 
   return (
-    <div className="glass-panel p-4 neon-border w-full lg:max-w-[calc(100vh-15rem)] lg:mx-auto relative">
+    <div className="glass-panel p-2 sm:p-4 neon-border w-full lg:max-w-[calc(100vh-15rem)] lg:mx-auto relative">
       <div className="corner-accent corner-tl" />
       <div className="corner-accent corner-tr" />
       <div className="corner-accent corner-bl" />
@@ -109,16 +109,16 @@ export function ChessBoard({
       <Chessboard options={boardOptions} />
 
       {wrongMoveActive && (
-        <div className="absolute bottom-4 left-4 right-4 z-30 flex items-center justify-between bg-red-950/90 border border-red-500/50 px-4 py-2.5 backdrop-blur-sm">
-          <div className="flex items-center gap-2">
+        <div className="absolute bottom-3 left-3 right-3 z-30 flex flex-col gap-2 bg-red-950/90 border border-red-500/50 px-3 py-2.5 backdrop-blur-sm sm:bottom-4 sm:left-4 sm:right-4 sm:flex-row sm:items-center sm:justify-between sm:px-4">
+          <div className="flex min-w-0 items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
-            <span className="font-mono text-xs text-red-400 uppercase tracking-widest">
+            <span className="font-mono text-[11px] text-red-400 uppercase tracking-normal sm:text-xs sm:tracking-widest">
               INVALID_SEQUENCE
             </span>
           </div>
           <button
             onClick={retryMove}
-            className="font-mono text-xs text-red-300 border border-red-500/60 px-4 py-1 hover:bg-red-500/20 transition-all uppercase tracking-widest"
+            className="font-mono text-[11px] text-red-300 border border-red-500/60 px-4 py-1 hover:bg-red-500/20 transition-all uppercase tracking-widest"
           >
             Retry
           </button>

@@ -12,10 +12,10 @@ function PlayerProfile() {
   const user = useAuthStore((state) => state.user);
 
   return (
-    <GlassPanel className="p-6 flex flex-col">
+    <GlassPanel className="p-5 sm:p-6 flex flex-col">
       <SectionHeader title="Player Profile" />
       <div className="flex flex-col items-center text-center flex-1 justify-center">
-        <div className="relative w-32 h-32 mb-6 border-2 border-primary p-2 rounded-sm">
+        <div className="relative w-28 h-28 sm:w-32 sm:h-32 mb-6 border-2 border-primary p-2 rounded-sm">
           <img
             src={PROFILE_IMG}
             alt="Tactician Emblem"

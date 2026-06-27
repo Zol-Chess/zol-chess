@@ -30,13 +30,13 @@ export function ClusterSelect() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
-        className="flex h-8 cursor-pointer items-center gap-2 border border-primary/50 bg-primary/5 px-4 font-mono text-xs font-bold uppercase tracking-widest text-primary transition-all hover:bg-primary/10 hover:shadow-[0_0_15px_rgba(20,241,149,0.25)]"
+        className="flex h-9 cursor-pointer items-center gap-2 border border-primary/50 bg-primary/5 px-3 font-mono text-[11px] font-bold uppercase tracking-normal text-primary transition-all hover:bg-primary/10 hover:shadow-[0_0_15px_rgba(20,241,149,0.25)] sm:h-8 sm:px-4 sm:text-xs sm:tracking-widest"
       >
         <span
           className="h-1.5 w-1.5 rounded-full"
           style={{ backgroundColor: clusterDotColor[cluster] }}
         />
-        {cluster}
+        <span className="hidden xs:inline">{cluster}</span>
         <span className="material-symbols-outlined text-sm leading-none">
           expand_more
         </span>
