@@ -13,7 +13,7 @@ pub use errors::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("4DbgpcAxF7u3Uf2T2obBLZXuHZCECnG3mEjrgxxqFr5K");
+declare_id!("8rma9vAqsVAz6pAWFCqnaGTktkzpVk1TWFQsgH3VEh6Y");
 
 #[program]
 pub mod zol_chess_program {

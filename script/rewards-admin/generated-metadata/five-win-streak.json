@@ -1,0 +1,15 @@
+{
+  "name": "Five Win Streak",
+  "description": "ZolChess achievement reward: Five Win Streak",
+  "image": "https://gateway.irys.xyz/13gLnXtPk3wQjy7jY88udCxk5bGv9vWHa8sQbpMAgmkW",
+  "attributes": [
+    {
+      "trait_type": "Achievement ID",
+      "value": 2
+    },
+    {
+      "trait_type": "Required Bit",
+      "value": "2"
+    }
+  ]
+}

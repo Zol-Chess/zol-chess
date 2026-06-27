@@ -1,0 +1,15 @@
+{
+  "name": "Puzzle Centurion",
+  "description": "ZolChess achievement reward: Puzzle Centurion",
+  "image": "https://gateway.irys.xyz/HyJJvc2hBZ9vAV8iKtbks1ybTd9UAyTSLxEUuPjU6Dyi",
+  "attributes": [
+    {
+      "trait_type": "Achievement ID",
+      "value": 4
+    },
+    {
+      "trait_type": "Required Bit",
+      "value": "8"
+    }
+  ]
+}

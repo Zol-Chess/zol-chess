@@ -1,5 +1,9 @@
 use anchor_lang::prelude::*;
-use mpl_core::{instructions::CreateV2CpiBuilder, ID as MPL_CORE_ID};
+use mpl_core::{
+    instructions::{AddPluginV1CpiBuilder, CreateV2CpiBuilder},
+    types::{FreezeDelegate, Plugin, PluginAuthority},
+    ID as MPL_CORE_ID,
+};
 
 use crate::{
     is_valid_achievement_bit, AchievementReward, ChessErrors, PlayerProfile, RewardsConfig,
@@ -89,12 +93,22 @@ impl<'info> ClaimAchievement<'info> {
             .collection(Some(&self.reward_collection.to_account_info()))
             .owner(Some(&self.player.to_account_info()))
             .authority(Some(&self.reward_authority.to_account_info()))
-            .update_authority(Some(&self.reward_authority.to_account_info()))
             .payer(&self.player.to_account_info())
+            .update_authority(None)
             .system_program(&self.system_program.to_account_info())
             .name(self.achievement_reward.name.clone())
             .uri(self.achievement_reward.uri.clone())
             .invoke_signed(signer_seeds)?;
+
+        AddPluginV1CpiBuilder::new(&self.mpl_core_program.to_account_info())
+            .asset(&self.asset.to_account_info())
+            .collection(Some(&self.reward_collection.to_account_info()))
+            .authority(Some(&self.player.to_account_info()))
+            .system_program(&self.system_program.to_account_info())
+            .payer(&self.player.to_account_info())
+            .plugin(Plugin::FreezeDelegate(FreezeDelegate { frozen: true }))
+            .init_authority(PluginAuthority::UpdateAuthority)
+            .invoke()?;
 
         self.user_achievement_claim.set_inner(UserAchievementClaim {
             player: self.player.key(),

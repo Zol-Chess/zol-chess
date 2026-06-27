@@ -1,0 +1,15 @@
+{
+  "name": "Ten Puzzles",
+  "description": "ZolChess achievement reward: Ten Puzzles",
+  "image": "https://gateway.irys.xyz/CewDLjrCfZSzJavJvwdBp8QucVFpXYcjHKfJGPAVmAfc",
+  "attributes": [
+    {
+      "trait_type": "Achievement ID",
+      "value": 3
+    },
+    {
+      "trait_type": "Required Bit",
+      "value": "4"
+    }
+  ]
+}
