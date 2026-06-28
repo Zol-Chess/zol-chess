@@ -1,4 +1,6 @@
 [toolchain]
+anchor_version = "0.31.1"
+sbf_tools_version = "v1.52"
 
 [features]
 resolution = true

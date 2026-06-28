@@ -8,10 +8,7 @@ import { useSWRConfig } from "swr";
 import { Puzzle } from "@/services/puzzle.ts/puzzle.types";
 import { getRandomPuzzles } from "@/services/puzzle.ts";
 import { showToast } from "@/lib/toast";
-import {
-  useChessMoves,
-  type PlayedMove,
-} from "@/lib/hooks/use-chess-moves";
+import { useChessMoves, type PlayedMove } from "@/lib/hooks/use-chess-moves";
 import { catchErr } from "@/utils/error-handlers";
 import { usePuzzleStore } from "@/state/puzzle";
 import { useAuthStore } from "@/state/auth";
@@ -31,12 +28,12 @@ function uciToLabel(uci: string): string {
 
 function appendPlayedMove(
   entries: MoveEntry[],
-  playedMove: PlayedMove,
+  playedMove: PlayedMove
 ): MoveEntry[] {
   const nextEntries = entries.map((entry) => ({ ...entry, active: false }));
   const entryIndex = nextEntries.findIndex(
     (entry) =>
-      entry.number === playedMove.moveNumber && !entry.white.startsWith("["),
+      entry.number === playedMove.moveNumber && !entry.white.startsWith("[")
   );
   const label = playedMove.san;
 
@@ -266,12 +263,14 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
         puzzleRating: puzzle.rating,
         timeTaken,
         solved: true,
-        attempts: incorrectCount,
+        attempts: incorrectCount + 1,
         solutionSignature: sigBytes,
       });
 
       await send({ instructions: [ix] });
-      mutate((key: unknown) => Array.isArray(key) && key[0] === "chain-profile");
+      mutate(
+        (key: unknown) => Array.isArray(key) && key[0] === "chain-profile"
+      );
 
       showToast("Solution submitted! Loading next puzzle...", "success");
       setTimeout(() => goToNextPuzzle(), 1500);

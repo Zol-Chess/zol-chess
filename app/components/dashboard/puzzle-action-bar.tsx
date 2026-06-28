@@ -16,7 +16,7 @@ export function PuzzleActionBar({
   puzzleSolved,
 }: PuzzleActionBarProps) {
   return (
-    <div className="flex flex-col gap-3 glass-panel p-3 sm:p-4 neon-border w-full lg:max-w-[calc(100vh-15rem)] lg:mx-auto sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 glass-panel p-3 sm:p-4 neon-border w-full lg:max-w-[calc(100vh-5rem)] lg:mx-auto sm:flex-row sm:items-center sm:justify-between">
       <div className="grid grid-cols-2 gap-3 sm:flex sm:gap-4">
         <button
           onClick={onHint}
