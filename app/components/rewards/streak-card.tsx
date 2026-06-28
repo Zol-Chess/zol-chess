@@ -19,7 +19,7 @@ export function StreakCard({
       <div>
         <div className="flex justify-between items-center mb-6 lg:mb-8 border-b border-primary/20 pb-4">
           <p className="text-primary font-mono text-xs tracking-widest uppercase leading-short">
-            UPTIME_STREAK
+            UPTIME STREAK
           </p>
           <span className="material-symbols-outlined text-primary animate-pulse">
             sensors
@@ -31,7 +31,7 @@ export function StreakCard({
         <p className="text-chess-muted font-mono text-xs mt-4 uppercase tracking-normal leading-long">
           LONGEST: {longestStreak}
           {" // "}
-          PUZZLES_SOLVED: {solved}
+          PUZZLES SOLVED: {solved}
         </p>
       </div>
 

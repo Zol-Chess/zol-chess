@@ -3,12 +3,12 @@ use anchor_lang::prelude::*;
 #[cfg(not(feature = "testing"))]
 use brine_ed25519::{hasher::Sha512, verify, Signature};
 
+#[cfg(not(feature = "testing"))]
+use crate::PUZZLE_PUBLIC_KEY;
 use crate::{
     ChessErrors, PlayerProfile, PuzzleHistory, FIRST_WIN, FIVE_STREAK, HUNDRED_PUZZLES,
     INITIAL_PLAYER_RATING, PLAYER_SEED, PUZZLE_HISTORY_SEED, TEN_PUZZLES,
 };
-#[cfg(not(feature = "testing"))]
-use crate::PUZZLE_PUBLIC_KEY;
 
 #[derive(Accounts)]
 pub struct SubmitPuzzle<'info> {
@@ -131,13 +131,19 @@ impl<'info> SubmitPuzzle<'info> {
 
             let player_elo = player_info.elo as i32;
             let puzzle_elo = puzzle_rating as i32;
-            let raw_gain = 10i32 + (puzzle_elo - player_elo) / 40;
+            let raw_gain = 10i32
+                + (puzzle_elo
+                    .checked_sub(player_elo)
+                    .ok_or(ChessErrors::MathsOverflow)?)
+                .checked_div(40)
+                .ok_or(ChessErrors::MathsOverflow)?;
+
             let base_gain = raw_gain.max(2) as u32;
 
             let gain = match attempts {
-                1 => base_gain,
-                2 => (base_gain / 2).max(1),
-                _ => 1,
+                1 => base_gain.checked_mul(5).ok_or(ChessErrors::MathsOverflow)?,
+                2 => (base_gain * 5 / 2).max(1),
+                _ => base_gain.max(1),
             };
 
             player_info.elo = player_info.elo.saturating_add(gain);

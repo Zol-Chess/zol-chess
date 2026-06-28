@@ -100,7 +100,7 @@ export function ChessBoard({
   };
 
   return (
-    <div className="glass-panel p-2 sm:p-4 neon-border w-full lg:max-w-[calc(100vh-15rem)] lg:mx-auto relative">
+    <div className="glass-panel p-2 sm:p-4 neon-border w-full lg:max-w-[calc(100vh-5rem)] lg:mx-auto relative">
       <div className="corner-accent corner-tl" />
       <div className="corner-accent corner-tr" />
       <div className="corner-accent corner-bl" />

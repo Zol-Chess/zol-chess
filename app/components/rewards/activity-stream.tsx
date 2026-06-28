@@ -14,11 +14,11 @@ export function ActivityStream({ entries }: { entries: PuzzleActivity[] }) {
       <div className="p-4 sm:p-6 border-b border-primary/20 flex flex-col md:flex-row md:justify-between md:items-center gap-4 bg-primary/5">
         <h3 className="font-mono text-xs uppercase tracking-normal sm:tracking-[0.2em] text-foreground flex items-center gap-2 leading-short">
           <span className="w-2 h-2 bg-primary rounded-full" />
-          Historical_Log_Stream
+          Historical Log Stream
         </h3>
         <div className="flex flex-wrap gap-3 sm:gap-4 items-center">
           <span className="px-3 py-1 bg-primary/10 border border-primary/30 text-[10px] text-primary font-mono uppercase leading-short">
-            Source: Player_PDA
+            Source: Player PDA
           </span>
           <span className="material-symbols-outlined text-chess-muted cursor-pointer hover:text-primary transition-colors">
             tune
@@ -27,10 +27,10 @@ export function ActivityStream({ entries }: { entries: PuzzleActivity[] }) {
       </div>
 
       <div className="overflow-x-auto flex-1">
-        <table className="w-full text-left border-collapse min-w-[560px] sm:min-w-[620px]">
+        <table className="w-full text-left border-collapse min-w-140 sm:min-w-155">
           <thead className="bg-chess-container-hi/50 text-chess-muted font-mono text-[10px] uppercase tracking-widest border-b border-primary/10">
             <tr>
-              <th className="px-6 py-4 font-medium">PUZZLE_ID</th>
+              <th className="px-6 py-4 font-medium">PUZZLE ID</th>
               <th className="px-6 py-4 font-medium">TIMESTAMP</th>
               <th className="px-6 py-4 font-medium">RESULT</th>
               <th className="px-6 py-4 font-medium text-right">PERFORMANCE</th>
@@ -81,7 +81,7 @@ export function ActivityStream({ entries }: { entries: PuzzleActivity[] }) {
       <div className="p-4 bg-primary/5 flex justify-center border-t border-primary/10">
         <div className="text-primary font-mono text-[11px] uppercase tracking-widest flex items-center gap-2 leading-short">
           <span className="material-symbols-outlined text-sm">history</span>
-          Latest_{entries.length}_Onchain_Records
+          Latest {entries.length} Onchain Records
         </div>
       </div>
     </div>
