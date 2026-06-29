@@ -26,7 +26,7 @@ export function RewardsTotalCard({
     <div className="lg:col-span-8 glass-panel neon-border p-5 sm:p-6 lg:p-8 flex flex-col justify-between overflow-hidden">
       <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
         <span className="material-symbols-outlined text-[88px] sm:text-[120px]">
-          currency exchange
+          currency_exchange
         </span>
       </div>
 

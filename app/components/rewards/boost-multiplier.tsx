@@ -4,7 +4,7 @@ export function BoostMultiplier({ nftCount }: { nftCount: number }) {
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 bg-primary/10 flex items-center justify-center border border-primary/30 shrink-0">
           <span className="material-symbols-outlined text-primary">
-            auto awesome
+            auto_awesome
           </span>
         </div>
         <div className="min-w-0">
