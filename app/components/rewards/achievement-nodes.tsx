@@ -25,7 +25,7 @@ export function AchievementNodes({
     <div className="glass-panel p-5 sm:p-6 border-primary/30">
       <h3 className="font-mono text-xs mb-5 sm:mb-6 uppercase tracking-normal sm:tracking-[0.3em] text-chess-muted border-b border-primary/20 pb-4 flex items-center gap-2 leading-short">
         <span className="material-symbols-outlined text-primary text-sm">
-          verified user
+          verified_user
         </span>
         Achievement Nodes
       </h3>
@@ -51,7 +51,7 @@ export function AchievementNodes({
               {achievement.claimed
                 ? "verified"
                 : achievement.unlocked
-                  ? "workspace premium"
+                  ? "workspace_premium"
                   : "lock"}
             </span>
             <span className="font-mono text-[9px] uppercase text-center px-1 tracking-normal text-chess-muted group-hover:text-current leading-short break-words">
