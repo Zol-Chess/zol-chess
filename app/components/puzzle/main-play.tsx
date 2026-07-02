@@ -354,7 +354,7 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 relative z-20">
         {/* ── Left column — board + actions (8 cols) ─────────── */}
-        <div className="xl:col-span-8 px-5 flex flex-col gap-4 lg:gap-6">
+        <div className="xl:col-span-8 px-5 flex flex-col gap-4 lg:gap-7">
           {boardData?.fen && (
             <ChessBoard
               chessPosition={chessPosition}
