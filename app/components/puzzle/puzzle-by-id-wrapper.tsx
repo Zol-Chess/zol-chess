@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import useSWR from "swr";
 
 import { decryptSolution } from "@/script/decrypt-solution";
@@ -8,6 +10,7 @@ import { Puzzle } from "@/services/puzzle.ts/puzzle.types";
 import { showToast } from "@/lib/toast";
 import { catchErr } from "@/utils/error-handlers";
 import { useWalletValues } from "@/lib/wallet/context";
+import { useCluster } from "@/components/cluster-context";
 
 import MainPlay from "./main-play";
 
@@ -16,14 +19,16 @@ interface PuzzleByIdWrapperProps {
 }
 
 const PuzzleByIdWrapper = ({ id }: PuzzleByIdWrapperProps) => {
+  const router = useRouter();
   const { signer, connect } = useWalletValues();
+  const { cluster } = useCluster();
   const playerPubkey = signer?.address ?? "";
 
   const { data: puzzle, isLoading } = useSWR<Puzzle | null>(
-    id && playerPubkey ? ["puzzle", id, playerPubkey] : null,
+    id && playerPubkey ? ["puzzle", id, playerPubkey, cluster] : null,
     async () => {
       try {
-        const puzzleResponse = await getPuzzleById(id, playerPubkey);
+        const puzzleResponse = await getPuzzleById(id, playerPubkey, cluster);
         if (!puzzleResponse.encryptedSolution || !puzzleResponse.solutionKey) {
           showToast("Puzzle solution unavailable.", "error");
           return null;
@@ -46,6 +51,12 @@ const PuzzleByIdWrapper = ({ id }: PuzzleByIdWrapperProps) => {
       }
     }
   );
+
+  useEffect(() => {
+    if (puzzle && puzzle.id !== id) {
+      router.replace(`/puzzles/${puzzle.id}`);
+    }
+  }, [puzzle, id, router]);
 
   if (!playerPubkey) {
     return (
