@@ -12,6 +12,7 @@ import { useChessMoves, type PlayedMove } from "@/lib/hooks/use-chess-moves";
 import { catchErr } from "@/utils/error-handlers";
 import { usePuzzleStore } from "@/state/puzzle";
 import { useAuthStore } from "@/state/auth";
+import { useCluster } from "@/components/cluster-context";
 import { difficultyLabel } from "@/utils/resolvers";
 import { useSendTransaction } from "@/lib/hooks/use-send-transaction";
 
@@ -68,6 +69,7 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
   const encryptedPuzzles = usePuzzleStore((s) => s.encryptedPuzzles);
   const setPuzzles = usePuzzleStore((s) => s.updatePuzzleList);
   const user = useAuthStore((s) => s.user);
+  const { cluster } = useCluster();
   const { send } = useSendTransaction();
   const { mutate } = useSWRConfig();
 
@@ -211,7 +213,8 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
       const puzzles = await getRandomPuzzles(
         user?.player_rating ?? 800,
         5,
-        signer?.address ?? ""
+        signer?.address ?? "",
+        cluster
       );
       if (!puzzles.length) {
         showToast("No more puzzles available right now.", "warning");
@@ -351,7 +354,7 @@ const MainPlay = ({ signer, puzzle, isLoading }: MainPlayProps) => {
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 relative z-20">
         {/* ── Left column — board + actions (8 cols) ─────────── */}
-        <div className="xl:col-span-8 flex flex-col gap-4 lg:gap-6">
+        <div className="xl:col-span-8 px-5 flex flex-col gap-4 lg:gap-7">
           {boardData?.fen && (
             <ChessBoard
               chessPosition={chessPosition}

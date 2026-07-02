@@ -2,33 +2,39 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { clientPromise } from "@/lib/mongodb";
 import { encryptSolution, signSolution } from "@/script/encrypt-solution";
+import { getAttemptedPuzzleIds } from "@/lib/server/attempted-puzzles";
 import { catchErr } from "@/utils/error-handlers";
 
 // Prevent Next.js from caching this route so $sample returns different puzzles each time
 export const dynamic = "force-dynamic";
 
-const RATING_BAND = 100;
+const RATING_BAND = 50;
 
-// GET /api/puzzles?rating=1200&count=10
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
   const rating = Number(searchParams.get("rating") ?? 800);
-  const count = Math.min(Number(searchParams.get("count") ?? 10), 50);
+  const count = Number(searchParams.get("count") ?? 5);
   const playerPubkey = searchParams.get("player") ?? "";
+  const cluster = searchParams.get("cluster");
 
   try {
     const client = await clientPromise;
     const collection = client.db("chess").collection("puzzles");
+    const attemptedIds = await getAttemptedPuzzleIds(playerPubkey, cluster);
+    const excludeMatch = attemptedIds.length
+      ? { puzzleId: { $nin: attemptedIds } }
+      : {};
 
     let puzzles = await collection
       .aggregate([
         {
           $match: {
             rating: {
-              $gte: Math.max(0, rating - RATING_BAND),
-              $lte: rating,
+              $gte: rating,
+              $lte: rating + RATING_BAND,
             },
+            ...excludeMatch,
           },
         },
         { $sample: { size: count } },
@@ -42,9 +48,10 @@ export async function GET(req: NextRequest) {
           {
             $match: {
               rating: {
-                $gte: Math.max(0, rating - RATING_BAND * 2),
-                $lte: rating,
+                $gte: rating,
+                $lte: rating + RATING_BAND * 2,
               },
+              ...excludeMatch,
             },
           },
           { $sample: { size: count } },
